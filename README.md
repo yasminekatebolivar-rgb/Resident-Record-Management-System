@@ -120,5 +120,6 @@ This is a proposed system and can be developed as a capstone project, thesis, or
 ---
 
 6. About the Developers
+   
 This system was developed by 3rd year students from West Visayas State University, BSIS 3B and BA Major—Bolivar, Yasmine Kate, Ilarde Ralph Victor, and Sorilla Cynthia Lene. The team collaborated in system design, development, and documentation, with each member contributing to different aspects to ensure the system’s functionality, accuracy, and usability.
 
