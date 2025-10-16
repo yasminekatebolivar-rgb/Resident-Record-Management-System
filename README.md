@@ -1,3 +1,7 @@
+<img width="1920" height="704" alt="RRMS" src="https://github.com/user-attachments/assets/fab10a68-feaa-41e4-8282-05bd21839b0f" />
+
+---
+
 Barangay Resident Information Management System
 
 1. Overview
@@ -111,4 +115,6 @@ This is a proposed system and can be developed as a capstone project, thesis, or
 5. About the Developers
    
 This system was developed by 3rd year students from West Visayas State University, BSIS 3B and BA Major—Bolivar, Yasmine Kate, Ilarde Ralph Victor, and Sorilla Cynthia Lene. The team collaborated in system design, development, and documentation, with each member contributing to different aspects to ensure the system’s functionality, accuracy, and usability.
+
+<img width="1920" height="690" alt="DEVELOPERS" src="https://github.com/user-attachments/assets/db51ee17-75af-4a28-a77b-908a5b523a7f" />
 
