@@ -20,7 +20,7 @@
 ---
 
 ## <span style="color:#ff7a00">Overview</span>
-The **Barangay Resident Information Management System** is a digital platform designed to help barangay staff efficiently record, organize, and manage resident and household information. It replaces paper forms and spreadsheets with a centralized and structured database.
+The **Barangay Resident Record Management System** is a digital platform designed to help barangay staff efficiently record, organize, and manage resident and household information. It replaces paper forms and spreadsheets with a centralized and structured database.
 
 > 👤 **Intended use:** Single-user / Admin-only (authorized barangay personnel).  
 > Functions include adding, updating, searching, and reporting resident data to support barangay operations and planning.
