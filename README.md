@@ -1,120 +1,104 @@
-<img width="1920" height="704" alt="RRMS" src="https://github.com/user-attachments/assets/fab10a68-feaa-41e4-8282-05bd21839b0f" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/fab10a68-feaa-41e4-8282-05bd21839b0f" width="900" alt="RRMS Banner"/>
+</p>
+
+<p align="center">
+  <strong style="color:#ff7a00">Digital • Centralized • Secure</strong><br/>
+  A simple admin-only system for managing resident & household information.
+</p>
 
 ---
 
-Barangay Resident Information Management System
-
-1. Overview
-
-The Barangay Resident Information Management System is a digital platform designed to help barangay staff efficiently record, organize, and manage resident and household information within the community. It replaces manual record-keeping methods such as paper forms and spreadsheets by providing a centralized and structured database.
-
-This system is intended for single-user or admin-only use, typically by authorized barangay personnel. It allows the admin to add, update, search, and generate reports about residents, ensuring accurate data management for barangay operations, planning, and documentation.
-
----
-
-2. Key Features
-
-2.1 Resident Information Management
-
-* Add new resident profiles
-* View complete resident details
-* Update existing records
-* Remove outdated or duplicate entries
-
-2.2 Household Profiling
-
-* Group residents by household
-* Identify head of family
-* Track number of household members
-
-2.3 Search and Filter
-
-* Search by name, age, or address (purok)
-* Filter based on categories such as:
-
-  * Senior citizens
-  * Minors
-  * Persons with disabilities (PWDs)
-  * Students
-  * Employed or unemployed individuals
-  * Voters or non-voters
-
-2.4 Resident Categorization / Tagging
-
-* Senior Citizen
-* PWD
-* Student
-* Employed / Unemployed
-* Voter / Non-voter
-* New resident / Transferred out
-
-2.5 Reporting and Statistics
-
-* Total population count
-* Number of households
-* Age group distribution
-* Count of voters, seniors, PWDs, etc.
-* Exportable or printable reports (PDF or Excel)
-
-2.6 Admin-Only Access
-
-* Restricted access for barangay personnel only
-* Protects resident privacy and sensitive information
-
-2.7 Optional Enhancements (If needed)
-
-* Resident photos or ID upload
-* Emergency contact information
-* Residency status (active or inactive)
-* Address or purok mapping
+## 🔶 Table of Contents
+- [Overview](#overview)  
+- [Key Features](#key-features)  
+- [Expected Outcomes](#expected-outcomes)  
+- [Project Status](#project-status)  
+- [Next Steps](#next-steps)  
+- [About the Developers](#about-the-developers)  
 
 ---
 
-3. Expected Outcomes
+## <span style="color:#ff7a00">Overview</span>
+The **Barangay Resident Information Management System** is a digital platform designed to help barangay staff efficiently record, organize, and manage resident and household information. It replaces paper forms and spreadsheets with a centralized and structured database.
 
-3.1 Centralized Data Management
-
-All resident information is organized in one secure system, reducing the risk of misplaced or inconsistent records.
-
-3.2 Faster Data Retrieval
-
-Search and filter functions allow staff to locate resident profiles instantly, improving service efficiency.
-
-3.3 Improved Decision-Making
-
-Accurate and updated data supports planning for programs, budgeting, census, and barangay services.
-
-3.4 Efficient Report Generation
-
-Automatic population summaries and reports can be prepared quickly for meetings, government requirements, or disaster response.
-
-3.5 Reduced Errors and Duplicates
-
-Digital data entry minimizes manual errors and improves data accuracy.
-
-3.6 Increased Transparency and Accountability
-
-All records are traceable and regularly updated, promoting responsible data management.
-
-3.7 Enhanced Public Service
-
-Transaction processes such as certificate requests and clearances become faster and more reliable.
-
-3.8 Support for Digital Transformation
-
-The system modernizes barangay operations and prepares the community for future digital initiatives.
+> 👤 **Intended use:** Single-user / Admin-only (authorized barangay personnel).  
+> Functions include adding, updating, searching, and reporting resident data to support barangay operations and planning.
 
 ---
 
-4. Project Status
+## <span style="color:#ff7a00">Key Features</span>
 
-This is a proposed system and can be developed as a capstone project, thesis, or practical tool for barangay administration.
+### 🧾 Resident Information Management
+- Add new resident profiles  
+- View complete resident details  
+- Update existing records  
+- Remove outdated or duplicate entries
+
+### 🏠 Household Profiling
+- Group residents by household  
+- Identify head of family  
+- Track number of household members
+
+### 🔎 Search & Filter
+- Search by name, age, or address (purok)  
+- Filters: senior citizens, minors, PWDs, students, employed/unemployed, voters/non-voters
+
+### 🏷️ Categorization / Tagging
+- Senior Citizen • PWD • Student • Employed/Unemployed • Voter/Non-voter • New / Transferred out
+
+### 📊 Reporting & Statistics
+- Total population count  
+- Number of households  
+- Age group distribution  
+- Counts for voters, seniors, PWDs, etc.  
+- Exportable reports (PDF / Excel)
+
+### 🔒 Admin-Only Access
+- Restricted to barangay personnel to protect privacy and sensitive information
+
+### ⚙️ Optional Enhancements
+- Resident photo / ID upload  
+- Emergency contacts  
+- Residency status (active/inactive)  
+- Purok / address mapping
 
 ---
 
-5. About the Developers
-   
-This system was developed by 3rd year students from West Visayas State University, BSIS 3B and BA Major—Bolivar, Yasmine Kate, Ilarde Ralph Victor, and Sorilla Cynthia Lene. The team collaborated in system design, development, and documentation, with each member contributing to different aspects to ensure the system’s functionality, accuracy, and usability.
+## <span style="color:#ff7a00">Expected Outcomes</span>
+- Centralized, secure data storage for residents  
+- Faster retrieval and transactions  
+- Informed decision-making for programs and budgets  
+- Quick generation of reports for meetings or disaster response  
+- Reduced errors and duplicate entries  
+- Increased transparency and accountability  
+- Improved public service delivery  
+- Support for barangay digital transformation
 
-<img width="1920" height="690" alt="DEVELOPERS" src="https://github.com/user-attachments/assets/db51ee17-75af-4a28-a77b-908a5b523a7f" />
+---
 
+## <span style="color:#ff7a00">Project Status</span>
+This is a **proposed system** — ideal for a capstone or thesis project, or for real barangay implementation after development and testing.
+
+---
+
+## <span style="color:#ff7a00">Next Steps</span>
+1. Define detailed system requirements  
+2. Design database schema & UI mockups  
+3. Implement core CRUD operations (resident & household modules)  
+4. Develop search, filter, and reporting modules  
+5. Conduct testing (unit, integration, user acceptance)  
+6. Deploy to barangay environment and train personnel
+
+---
+
+## <span style="color:#ff7a00">About the Developers</span>
+Developed by **3rd year students** from West Visayas State University, BSIS 3B and BA Major —  
+**Bolivar, Yasmine Kate • Ilarde, Ralph Victor • Sorilla, Cynthia Lene**  
+The team collaborated on design, development, and documentation to ensure functionality, accuracy, and usability.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/db51ee17-75af-4a28-a77b-908a5b523a7f" width="900" alt="Developers"/>
+</p>
+
+---
