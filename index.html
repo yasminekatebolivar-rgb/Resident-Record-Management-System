@@ -542,17 +542,17 @@
 
     <div class="developers-grid">
       <div class="dev-card">
-        <img src="" alt="">
+        <img src="img 1.jpg" alt="Bolivar, Yasmine Kate">
         <h3>Bolivar, Yasmine Kate</h3>
       </div>
 
       <div class="dev-card">
-        <img src="" alt="">
+        <img src="img 2.png" alt="Ilarde, Ralph Victor">
         <h3>Ilarde, Ralph Victor</h3>
       </div>
 
       <div class="dev-card">
-        <img src="" alt="">
+        <img src="img3.jpg" alt="Sorilla, Cynthia Lene">
         <h3>Sorilla, Cynthia Lene</h3>
       </div>
     </div>
@@ -563,28 +563,32 @@
 <style>
 .developers-section {
   padding: 80px 10%;
-  background:linear-gradient(to bottom, #fb6603, #f0c29d);
+  background: linear-gradient(to bottom, #fb6603, #f0c29d);
   text-align: center;
 }
 
 .developers-container {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
 }
 
 .developers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 30px;
   margin-top: 50px;
+  justify-items: center;
 }
 
+/* ✅ Developer card styling */
 .dev-card {
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   padding: 25px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 300px;
 }
 
 .dev-card:hover {
@@ -592,31 +596,35 @@
   box-shadow: 0 8px 18px rgba(0,0,0,0.15);
 }
 
-.dev-avatar {
-  font-size: 2.5em;
-  background: #fff3e5;
-  color: #ff7a00;
-  width: 70px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-  margin: 0 auto 15px;
+/* Make images fit perfectly in their boxes */
+.dev-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
+/* Developer name styling */
 .dev-card h3 {
   color: #333;
   font-size: 1.1em;
   margin-bottom: 5px;
 }
 
-.dev-card p {
-  color: #666;
-  font-size: 0.95em;
+/* Responsive layout */
+@media (max-width: 900px) {
+  .developers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .developers-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
-
 
 <!-- LOGIN MODAL -->
 <div id="loginModal" class="modal">
