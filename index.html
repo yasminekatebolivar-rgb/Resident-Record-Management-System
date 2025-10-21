@@ -630,12 +630,178 @@
 <div id="loginModal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="closeModal()">&times;</span>
-    <h3>Admin Login</h3>
-    <input type="text" placeholder="Username">
-    <input type="password" placeholder="Password">
-    <button>Login</button>
+    <div class="login-card">
+      <div class="login-icon">🔒</div>
+      <h3>Admin Login</h3>
+      <p class="subtitle">Access the Resident Record Management System</p>
+      
+      <label>Username</label>
+      <input type="text" placeholder="Enter your username">
+      
+      <label>Password</label>
+      <input type="password" placeholder="Enter your password">
+      
+      <button>Login to Dashboard</button>
+      <p class="note">Admin-only access. Authorized personnel only.</p>
+    </div>
   </div>
 </div>
+
+<style>
+/* MODAL BACKGROUND */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+  backdrop-filter: blur(5px);
+}
+
+/* MODAL CONTENT */
+.modal-content {
+  background: linear-gradient(to bottom right, #fff, #fff);
+  margin: auto;
+  padding: 40px;
+  border: none;
+  width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+/* CLOSE BUTTON */
+.close {
+  color: #aaa;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+}
+.close:hover {
+  color: #ff6600;
+}
+
+/* LOGIN CARD CONTENT */
+.login-card {
+  text-align: center;
+}
+.login-icon {
+  background-color: #ff6600;
+  color: white;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 20px;
+  border-radius: 15px;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-card h3 {
+  margin-bottom: 5px;
+  font-size: 1.5rem;
+  color: #333;
+}
+.subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+}
+label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  background-color: #f8f8f8;
+}
+input:focus {
+  outline: none;
+  border-color: #ff6600;
+  background-color: #fff;
+}
+
+/* Fix for homepage buttons */
+section#home button,
+section#home .home-buttons button {
+  width: auto !important;
+  padding: 12px 40px !important;
+  border-radius: 40px !important;
+  font-size: 1rem !important;
+}
+
+/* Ensure modal button stays full width */
+#loginModal button {
+  width: 100% !important;
+}
+
+
+.login-btn {
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 8px 24px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+  display: inline-block;
+  width: auto; /* prevents full width stretch */
+  margin-right: 20px;
+}
+
+.login-btn:hover {
+  background-color: #e65c00;
+}
+
+
+/* BUTTON */
+button {
+  width: 10%;
+  background-color: #ff6600;
+  border: none;
+  padding: 14px;
+  border-radius: 30px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+button:hover {
+  background-color: #e95a00;
+}
+
+/* FOOTNOTE */
+.note {
+  color: #777;
+  font-size: 0.85rem;
+  margin-top: 15px;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {opacity: 0; transform: scale(0.95);}
+  to {opacity: 1; transform: scale(1);}
+}
+</style>
 
 <script>
   function showPage(pageId, el) {
