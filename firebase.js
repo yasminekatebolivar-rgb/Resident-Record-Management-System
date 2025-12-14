@@ -17,17 +17,6 @@
 
   console.log("Firebase connected to Resident Record DB");
 
-async function addResident() {
-  await addDoc(collection(db, "residents"), {
-    firstName: "Juan",
-    lastName: "Dela Cruz",
-    gender: "Male",
-    civilStatus: "Single",
-    address: "Brgy. Mandurriao, Iloilo City",
-    createdAt: new Date()
-  });
-}
 
-addResident();
 
 </script>
