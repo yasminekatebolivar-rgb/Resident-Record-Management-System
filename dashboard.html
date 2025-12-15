@@ -6,13 +6,12 @@
   <title>RRMS Admin Dashboard</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    /* GENERAL */
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background: #f4f6f8;
       display: flex;
-      color: #333;
+      overflow-x: hidden;
     }
 
     /* SIDEBAR */
@@ -22,14 +21,14 @@
       color: white;
       height: 100vh;
       position: fixed;
-      left: 0;
+      left: -220px; /* HIDDEN initially */
       top: 0;
       display: flex;
       flex-direction: column;
-      transition: transform 0.3s;
+      transition: left 0.3s;
       z-index: 100;
     }
-    .sidebar.hide { transform: translateX(-100%); }
+    .sidebar.show { left: 0; }
 
     .sidebar h2 {
       text-align: center;
@@ -50,31 +49,28 @@
       transition: background 0.2s;
       cursor: pointer;
     }
-    .sidebar a:hover {
-      background: rgba(255,255,255,0.15);
-    }
+    .sidebar a:hover { background: rgba(255,255,255,0.15); }
 
     /* HAMBURGER */
     .hamburger {
       position: fixed;
-      left: 230px;
+      left: 20px;
       top: 20px;
-      font-size: 24px;
+      font-size: 26px;
       cursor: pointer;
       color: #1e906f;
       z-index: 101;
       transition: left 0.3s;
     }
-    .hamburger.hide { left: 20px; }
 
     /* MAIN CONTENT */
     .main {
-      margin-left: 220px;
+      margin-left: 0;
       padding: 30px;
       width: 100%;
       transition: margin-left 0.3s;
     }
-    .main.full { margin-left: 0; }
+    .main.shift { margin-left: 220px; }
 
     /* DASHBOARD GRID */
     .dashboard-grid {
@@ -141,7 +137,6 @@
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .dashboard-grid { grid-template-columns: 1fr; }
-      .hamburger { left: 20px; top: 20px; }
     }
   </style>
 </head>
@@ -162,12 +157,10 @@
 
   <!-- MAIN CONTENT -->
   <div class="main" id="mainContent">
-
     <!-- RESIDENTS SECTION -->
     <div id="residentsSection">
       <div class="dashboard-grid">
-
-        <!-- LEFT: FORM -->
+        <!-- FORM -->
         <div class="card">
           <h3 id="formTitle">Add Resident</h3>
           <form id="residentForm">
@@ -192,7 +185,7 @@
           </form>
         </div>
 
-        <!-- RIGHT: TABLE -->
+        <!-- TABLE -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h3>Resident Records</h3>
@@ -214,7 +207,6 @@
             <tbody id="residentTable"></tbody>
           </table>
         </div>
-
       </div>
     </div>
 
@@ -262,7 +254,6 @@
     const household = document.getElementById("household");
     const table = document.getElementById("residentTable");
     const searchInput = document.getElementById("searchInput");
-
     let currentEditId = null;
 
     async function addResident(e) {
@@ -286,7 +277,6 @@
       form.reset();
       document.getElementById("formTitle").innerText = "Add Resident";
     }
-
     form.addEventListener("submit", addResident);
 
     onSnapshot(collection(db, "residents"), snapshot => {
@@ -304,13 +294,9 @@
             <td>${r.household}</td>
             <td>
               <button class="action-btn edit-btn"
-                onclick="editResident('${docSnap.id}', '${r.fullname}', ${r.age}, '${r.gender}', '${r.civilStatus}', '${r.contactNumber}', '${r.purok}', '${r.household}')">
-                  Edit
-              </button>
+                onclick="editResident('${docSnap.id}', '${r.fullname}', ${r.age}, '${r.gender}', '${r.civilStatus}', '${r.contactNumber}', '${r.purok}', '${r.household}')">Edit</button>
               <button class="action-btn delete-btn"
-                onclick="deleteResident('${docSnap.id}')">
-                  Delete
-              </button>
+                onclick="deleteResident('${docSnap.id}')">Delete</button>
             </td>
           </tr>`;
       });
@@ -350,8 +336,8 @@
     const mainContent = document.getElementById("mainContent");
 
     hamburger.addEventListener("click", () => {
-      sidebar.classList.toggle("hide");
-      mainContent.classList.toggle("full");
+      sidebar.classList.toggle("show");
+      mainContent.classList.toggle("shift");
     });
 
     // SHOW SECTIONS
@@ -361,7 +347,6 @@
         document.getElementById(id).style.display = (id === sectionId) ? "block" : "none";
       });
     }
-
   </script>
 </body>
 </html>
