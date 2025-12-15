@@ -21,13 +21,13 @@
   }
 
   .hamburger {
-    font-size: 28px;
+    font-size: 22px;
     cursor: pointer;
     background: #1e906f;
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
   }
 
   /* SIDEBAR */
@@ -60,7 +60,7 @@
     position: absolute;
     top: 15px;
     right: 15px;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
     background: none;
     border: none;
@@ -69,7 +69,7 @@
 
   /* MAIN CONTENT */
   .main-container {
-    padding: 30px 30px 30px 70px; /* space for hamburger button */
+    padding: 30px 30px 30px 30px;
     max-width: 1300px;
     margin: auto;
   }
@@ -210,7 +210,6 @@
   </div>
 </div>
 
-<!-- FIREBASE & JS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
