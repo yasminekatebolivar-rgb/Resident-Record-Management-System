@@ -4,14 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>RRMS Admin Dashboard</title>
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    /* GENERAL STYLES */
+    /* GENERAL */
     body {
       font-family: 'Poppins', sans-serif;
       margin: 0;
       background: #f4f6f8;
       display: flex;
+      color: #333;
     }
 
     /* SIDEBAR */
@@ -23,19 +24,19 @@
       position: fixed;
       left: 0;
       top: 0;
-      transition: transform 0.3s ease;
       display: flex;
       flex-direction: column;
+      transition: transform 0.3s;
+      z-index: 100;
     }
-
-    .sidebar.hide {
-      transform: translateX(-100%);
-    }
+    .sidebar.hide { transform: translateX(-100%); }
 
     .sidebar h2 {
       text-align: center;
-      padding: 20px 0;
       margin: 0;
+      padding: 25px 0;
+      font-size: 20px;
+      font-weight: 600;
       background: linear-gradient(90deg, #43e97b, #38f9d7);
     }
 
@@ -43,30 +44,28 @@
       color: white;
       padding: 15px 20px;
       text-decoration: none;
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       transition: background 0.2s;
       cursor: pointer;
     }
-
     .sidebar a:hover {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.15);
     }
 
     /* HAMBURGER */
     .hamburger {
       position: fixed;
       left: 230px;
-      top: 15px;
+      top: 20px;
       font-size: 24px;
       cursor: pointer;
       color: #1e906f;
-      z-index: 1000;
+      z-index: 101;
       transition: left 0.3s;
     }
-
-    .hamburger.hide {
-      left: 10px;
-    }
+    .hamburger.hide { left: 20px; }
 
     /* MAIN CONTENT */
     .main {
@@ -75,32 +74,35 @@
       width: 100%;
       transition: margin-left 0.3s;
     }
+    .main.full { margin-left: 0; }
 
-    .main.full {
-      margin-left: 0;
+    /* DASHBOARD GRID */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 30px;
     }
 
     /* CARDS */
     .card {
       background: white;
       border-radius: 12px;
-      padding: 20px;
+      padding: 25px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
     }
+    h3 { margin-top: 0; font-size: 20px; color: #1e906f; }
 
-    h3 { margin-top: 0; }
-
+    /* FORM */
     form input, form select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      font-size: 14px;
     }
-
     form button {
-      background: #1e906f;
+      background: linear-gradient(90deg, #43e97b, #38f9d7);
       color: white;
       border: none;
       padding: 12px;
@@ -108,35 +110,39 @@
       font-weight: 600;
       cursor: pointer;
       width: 100%;
+      transition: opacity 0.2s;
     }
+    form button:hover { opacity: 0.9; }
 
+    /* TABLE */
     table {
       width: 100%;
       border-collapse: collapse;
+      font-size: 14px;
     }
-
     table th, table td {
       padding: 12px;
       border-bottom: 1px solid #ddd;
       text-align: left;
     }
-
-    table th {
-      background: #f1f1f1;
-    }
-
+    table th { background: #e9f5f2; color: #1e906f; font-weight: 600; }
     .action-btn { padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer; margin-right: 5px; font-weight: 600; }
     .edit-btn { background: #ffb74d; color: white; }
     .delete-btn { background: #e57373; color: white; }
 
-    /* SEARCH INPUT */
+    /* SEARCH */
     #searchInput {
-      width: 250px; 
-      padding: 10px; 
-      border-radius: 20px; 
+      width: 250px;
+      padding: 10px;
+      border-radius: 20px;
       border: 1px solid #ccc;
     }
 
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .hamburger { left: 20px; top: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -144,11 +150,11 @@
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <h2>Admin Menu</h2>
-    <a onclick="showSection('residentsSection')">Residents</a>
-    <a onclick="showSection('householdsSection')">Households</a>
-    <a onclick="showSection('reportsSection')">Reports</a>
-    <a onclick="showSection('settingsSection')">Settings</a>
-    <a onclick="logout()">Logout</a>
+    <a onclick="showSection('residentsSection')"><i class="fas fa-user"></i> Residents</a>
+    <a onclick="showSection('householdsSection')"><i class="fas fa-home"></i> Households</a>
+    <a onclick="showSection('reportsSection')"><i class="fas fa-file-alt"></i> Reports</a>
+    <a onclick="showSection('settingsSection')"><i class="fas fa-cog"></i> Settings</a>
+    <a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
   </div>
 
   <!-- HAMBURGER -->
@@ -159,10 +165,9 @@
 
     <!-- RESIDENTS SECTION -->
     <div id="residentsSection">
-
       <div class="dashboard-grid">
 
-        <!-- LEFT: ADD / EDIT RESIDENT -->
+        <!-- LEFT: FORM -->
         <div class="card">
           <h3 id="formTitle">Add Resident</h3>
           <form id="residentForm">
@@ -187,13 +192,12 @@
           </form>
         </div>
 
-        <!-- RIGHT: LIST -->
+        <!-- RIGHT: TABLE -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
             <h3>Resident Records</h3>
             <input type="text" id="searchInput" placeholder="Search resident..." />
           </div>
-
           <table>
             <thead>
               <tr>
@@ -212,10 +216,9 @@
         </div>
 
       </div>
-
     </div>
 
-    <!-- OTHER SECTIONS PLACEHOLDER -->
+    <!-- OTHER SECTIONS -->
     <div id="householdsSection" style="display:none;">
       <div class="card"><h3>Households Section (Coming Soon)</h3></div>
     </div>
@@ -247,9 +250,7 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    onAuthStateChanged(auth, user => {
-      if (!user) window.location.href = "index.html";
-    });
+    onAuthStateChanged(auth, user => { if (!user) window.location.href = "index.html"; });
 
     const form = document.getElementById("residentForm");
     const fullname = document.getElementById("fullname");
@@ -350,7 +351,6 @@
 
     hamburger.addEventListener("click", () => {
       sidebar.classList.toggle("hide");
-      hamburger.classList.toggle("hide");
       mainContent.classList.toggle("full");
     });
 
