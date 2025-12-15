@@ -22,7 +22,7 @@
   }
 
   .hamburger {
-    font-size: 20px;
+    font-size: 22px;
     cursor: pointer;
     background: #1e906f;
     color: white;
@@ -73,7 +73,7 @@
 
   /* MAIN CONTENT */
   .main-container {
-    padding: 30px 30px 30px 30px;
+    padding: 30px;
     max-width: 1300px;
     margin: auto;
     transition: margin-left 0.3s;
@@ -261,14 +261,12 @@ async function addResident(e){
     household: household.value,
     createdAt: new Date()
   };
-
   if(currentEditId){
     await updateDoc(doc(db, "residents", currentEditId), data);
     currentEditId = null;
   } else {
     await addDoc(collection(db, "residents"), data);
   }
-
   form.reset();
   document.getElementById("formTitle").innerText = "Add Resident";
 }
@@ -324,7 +322,6 @@ searchInput.addEventListener("input", ()=>{
 // SIDEBAR FUNCTIONS
 function openSidebar(){ document.getElementById("sidebar").style.left = "0"; }
 function closeSidebar(){ document.getElementById("sidebar").style.left = "-250px"; }
-
 </script>
 
 </body>
