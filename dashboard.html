@@ -12,26 +12,66 @@
       background: #f4f6f8;
     }
 
-    header {
-      background: #1e906f;
-      color: white;
-      padding: 15px 30px;
+    .app-layout {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      min-height: 100vh;
     }
 
-    header h2 { margin: 0; }
+    .sidebar {
+      width: 240px;
+      background: #1e906f;
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .logout-btn {
-      background: #fff;
+    .sidebar .logo {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .nav-menu a {
+      display: block;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      border-radius: 8px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .sidebar .logout-btn {
+      margin-top: auto;
+      background: white;
       color: #1e906f;
       border: none;
-      padding: 8px 18px;
+      padding: 12px;
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
     }
+     .main-content {
+      flex: 1;
+    }
+
+    header {
+      background: white;
+      padding: 18px 30px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    header h2 {
+      margin: 0;
+      color: #1e906f;
+    }
+
 
     .container {
       padding: 30px;
@@ -50,7 +90,6 @@
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
     }
 
     h3 { margin-top: 0; }
@@ -64,6 +103,7 @@
     }
 
     form button {
+      width: 100%;
       background: #1e906f;
       color: white;
       border: none;
@@ -71,7 +111,6 @@
       border-radius: 25px;
       font-weight: 600;
       cursor: pointer;
-      width: 100%;
     }
 
 
@@ -92,75 +131,95 @@
     .action-btn { padding: 6px 14px; border-radius: 20px; border: none; cursor: pointer; margin-right: 5px; font-weight: 600  }
     .edit-btn { background: #ffb74d; color: white; }
     .delete-btn { background: #e57373; color: white; }
+
+    #searchInput {
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      width: 260px;
+    }
     
   
   </style>
 </head>
 <body>
 
-<header>
-  <h2>RRMS Admin Dashboard</h2>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</header>
+<div class="app-layout">
 
-<div class="container">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">RRMS</div>
 
-  <!-- ADD RESIDENT -->
-  <div class="dashboard-grid">
+    <nav class="nav-menu">
+      <a class="active">Dashboard</a>
+      <a>Residents</a>
+      <a>Households</a>
+      <a>Reports</a>
+      <a>Settings</a>
+    </nav>
 
-  <!-- LEFT: ADD / EDIT RESIDENT -->
-  <div class="card">
-    <h3 id="formTitle">Add Resident</h3>
-    <form id="residentForm">
-      <input type="text" id="fullname" placeholder="Full Name" required />
-      <input type="number" id="age" placeholder="Age" required />
-      <select id="gender" required>
-        <option value="">Select Gender</option>
-        <option>Male</option>
-        <option>Female</option>
-      </select>
-      <input type="text" id="household" placeholder="Household" required />
-      <button type="submit">Save Resident</button>
-    </form>
-  </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </aside>
 
-  <!-- RIGHT: LIST -->
-  <div class="card">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-      <h3>Resident Records</h3>
-      <input type="text" id="searchInput"
-        placeholder="Search resident..."
-        style="width:250px; padding:10px; border-radius:20px; border:1px solid #ccc;">
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <header>
+      <h2>Admin Dashboard</h2>
+    </header>
+
+    <div class="container">
+
+      <div class="dashboard-grid">
+
+        <!-- LEFT: FORM -->
+        <div class="card">
+          <h3 id="formTitle">Add Resident</h3>
+          <form id="residentForm">
+            <input type="text" id="fullname" placeholder="Full Name" required />
+            <input type="number" id="age" placeholder="Age" required />
+            <select id="gender" required>
+              <option value="">Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+            <input type="text" id="household" placeholder="Household" required />
+            <button type="submit">Save Resident</button>
+          </form>
+        </div>
+
+        <!-- RIGHT: TABLE -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3>Resident Records</h3>
+            <input type="text" id="searchInput" placeholder="Search name or household">
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Full Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Household</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="residentTable"></tbody>
+          </table>
+        </div>
+
+      </div>
     </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Full Name</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Household</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="residentTable"></tbody>
-    </table>
-  </div>
-
-</div>
+  </main>
 </div>
 
-<!-- FIREBASE -->
+<!-- ===== FIREBASE ===== -->
 <script type="module">
-  // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
   import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-  
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
 
-  // Your web app's Firebase configuration
   const firebaseConfig = {
     apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
     authDomain: "resident-management-syst-15b46.firebaseapp.com",
@@ -170,58 +229,44 @@
     appId: "1:459740472804:web:9d4c58fac471837a1153f1"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   onAuthStateChanged(auth, user => {
-    if (!user) window.location.href = "index.html";
+    if (!user) location.href = "index.html";
   });
 
   const form = document.getElementById("residentForm");
-  const fullname = document.getElementById("fullname");
-  const age = document.getElementById("age");
-  const gender = document.getElementById("gender");
-  const household = document.getElementById("household");
   const table = document.getElementById("residentTable");
   const searchInput = document.getElementById("searchInput");
+  let currentEditId = null;
 
-  let currentEditId = null; // track editing
-
-  async function addResident(e) {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
+
+    const data = {
+      fullname: fullname.value,
+      age: age.value,
+      gender: gender.value,
+      household: household.value
+    };
+
     if (currentEditId) {
-      // update existing
-      await updateDoc(doc(db, "residents", currentEditId), {
-        fullname: fullname.value,
-        age: age.value,
-        gender: gender.value,
-        household: household.value
-      });
+      await updateDoc(doc(db, "residents", currentEditId), data);
       currentEditId = null;
+      document.getElementById("formTitle").innerText = "Add Resident";
     } else {
-      // add new
-      await addDoc(collection(db, "residents"), {
-        fullname: fullname.value,
-        age: age.value,
-        gender: gender.value,
-        household: household.value,
-        createdAt: new Date()
-      });
+      await addDoc(collection(db, "residents"), { ...data, createdAt: new Date() });
     }
+
     form.reset();
-    currentEditId = null;
-    document.getElementById("formTitle").innerText = "Add Resident";
-  }
+  });
 
-  form.addEventListener("submit", addResident);
-
-  // Listen to Firestore changes
-  onSnapshot(collection(db, "residents"), snapshot => {
+  onSnapshot(collection(db, "residents"), snap => {
     table.innerHTML = "";
-    snapshot.forEach(docSnap => {
-      const r = docSnap.data();
+    snap.forEach(d => {
+      const r = d.data();
       table.innerHTML += `
         <tr>
           <td>${r.fullname}</td>
@@ -229,52 +274,41 @@
           <td>${r.gender}</td>
           <td>${r.household}</td>
           <td>
-            <button class="action-btn edit-btn"
-                onclick="editResident('${docSnap.id}', '${r.fullname}', ${r.age}, '${r.gender}', '${r.household}')">
-                  Edit
-            </button>
-
-            <button class="action-btn delete-btn"
-                onclick="deleteResident('${docSnap.id}')">
-                  Delete
-            </button>
+            <button class="action-btn edit-btn" onclick="editResident('${d.id}','${r.fullname}',${r.age},'${r.gender}','${r.household}')">Edit</button>
+            <button class="action-btn delete-btn" onclick="deleteResident('${d.id}')">Delete</button>
           </td>
         </tr>`;
     });
   });
 
-  // Edit function
-  window.editResident = (id, f, a, g, h) => {
+  window.editResident = (id,f,a,g,h) => {
     fullname.value = f;
     age.value = a;
     gender.value = g;
     household.value = h;
     currentEditId = id;
-
     document.getElementById("formTitle").innerText = "Edit Resident";
   };
 
-  // Delete function
-  window.deleteResident = async (id) => {
-    if (confirm("Are you sure you want to delete this resident?")) {
+  window.deleteResident = async id => {
+    if (confirm("Delete this resident?")) {
       await deleteDoc(doc(db, "residents", id));
     }
   };
 
-  // Logout
-  window.logout = () => signOut(auth).then(() => location.href = "index.html");
-
   searchInput.addEventListener("input", () => {
-    const filter = searchInput.value.toLowerCase();
-    table.querySelectorAll("tr").forEach(row => {
-      const fullnameText = row.cells[0].textContent.toLowerCase();
-      const householdText = row.cells[3].textContent.toLowerCase();
-      row.style.display = (fullnameText.includes(filter) || householdText.includes(filter)) ? "" : "none";
+    const v = searchInput.value.toLowerCase();
+    document.querySelectorAll("#residentTable tr").forEach(r => {
+      r.style.display =
+        r.cells[0].innerText.toLowerCase().includes(v) ||
+        r.cells[3].innerText.toLowerCase().includes(v)
+          ? "" : "none";
     });
   });
 
-  
+  window.logout = () => signOut(auth).then(() => location.href="index.html");
 </script>
+
   
 
 </body>
