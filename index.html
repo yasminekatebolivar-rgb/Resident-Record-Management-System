@@ -840,21 +840,31 @@ button:hover { background-color: #38b589;
   const auth = getAuth(app);
   
 
-  window.auth = auth;
-
- window.adminLogin = function() {
-  const email = document.querySelector('#loginModal input[type="text"]').value;
-  const password = document.querySelector('#loginModal input[type="password"]').value;
+window.adminLogin = () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
   signInWithEmailAndPassword(auth, email, password)
     .then(() => {
       alert("Login successful!");
-      closeModal();
-      window.location.href = "dashboard.html"; // redirect to dashboard
+      window.location.href = "dashboard.html";
     })
-    .catch(err => alert("Login failed: " + err.message));
+    .catch(error => {
+      alert("Login failed: " + error.message);
+    });
 };
 
+function showPage(pageId, el) {
+  document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
+  document.getElementById(pageId).style.display = 'block';
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  if (el) el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function openModal(){ document.getElementById('loginModal').style.display='block'; }
+function closeModal(){ document.getElementById('loginModal').style.display='none'; }
+window.onclick = e => { if(e.target==document.getElementById('loginModal')) closeModal(); }
 </script>
 
 </body>
