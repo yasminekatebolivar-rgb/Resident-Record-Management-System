@@ -16,6 +16,8 @@
     position: fixed; top: 0; width: 100%; z-index: 10;
   }
 
+  header h2 { margin:0; }
+
   .logo { display: flex; align-items: center; gap: 10px; }
   .logo-box { background: #1e906f; color: white; font-weight: bold;
     border-radius: 12px; padding: 8px 12px; }
@@ -118,6 +120,10 @@
   }
   .close { color: #aaa; float: right; font-size: 22px; cursor: pointer; }
   .close:hover { color: #1e906f; }
+  input { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:1px solid #ccc; }
+  button.submit-btn { width:100%; padding:12px; background:#1e906f; color:white; border:none; border-radius:25px; font-weight:600; cursor:pointer; }
+  button.submit-btn:hover { background:#38b589; }
+ .note { color:#777; font-size:0.85rem; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -638,12 +644,13 @@
       <p class="subtitle">Access the Resident Record Management System</p>
       
       <label>Username</label>
-      <input type="text" placeholder="Enter your username">
+      <input type="email" id="email" placeholder="Email" required />
+    
       
       <label>Password</label>
-      <input type="password" placeholder="Enter your password">
+      <input type="password" id="password" placeholder="Password" required />
       
-      <button onclick="adminLogin()">Login to Dashboard</button>
+      <button class="submit-btn" onclick="adminLogin()">Login to Dashboard</button>
      
       <p class="note">Admin-only access. Authorized personnel only.</p>
     </div>
@@ -840,31 +847,27 @@ button:hover { background-color: #38b589;
   const auth = getAuth(app);
   
 
-window.adminLogin = () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      alert("Login successful!");
-      window.location.href = "dashboard.html";
-    })
-    .catch(error => {
-      alert("Login failed: " + error.message);
-    });
-};
-
-function showPage(pageId, el) {
-  document.querySelectorAll('section').forEach(sec => sec.style.display = 'none');
-  document.getElementById(pageId).style.display = 'block';
-  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-  if (el) el.classList.add('active');
-  window.scrollTo(0,0);
-}
-
 function openModal(){ document.getElementById('loginModal').style.display='block'; }
-function closeModal(){ document.getElementById('loginModal').style.display='none'; }
-window.onclick = e => { if(e.target==document.getElementById('loginModal')) closeModal(); }
+  function closeModal(){ document.getElementById('loginModal').style.display='none'; }
+  window.onclick = e => { if(e.target == document.getElementById('loginModal')) closeModal(); }
+
+  // Check if already logged in
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.href = "dashboard.html";
+  });
+
+  window.adminLogin = () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    if (!email || !password) { alert("Please enter email and password"); return; }
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => { 
+        alert("Login successful! Redirecting to dashboard...");
+        window.location.href = "dashboard.html"; 
+      })
+      .catch(err => alert("Login failed: " + err.message));
+  };
 </script>
 
 </body>
