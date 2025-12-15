@@ -644,7 +644,7 @@
       <p class="subtitle">Access the Resident Record Management System</p>
       
       <label>Username</label>
-      <input type="text" id="email" placeholder="Enter your username">
+      <input type="email" id="email" placeholder="Enter your email">
     
       
       <label>Password</label>
@@ -829,7 +829,7 @@ button:hover { background-color: #38b589;
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
   
  
   // Your web app's Firebase configuration
@@ -847,27 +847,27 @@ button:hover { background-color: #38b589;
   const auth = getAuth(app);
   
 
-function openModal(){ document.getElementById('loginModal').style.display='block'; }
-  function closeModal(){ document.getElementById('loginModal').style.display='none'; }
-  window.onclick = e => { if(e.target == document.getElementById('loginModal')) closeModal(); }
+onAuthStateChanged(auth, user => {
+    if(user) window.location.href = "dashboard.html";
+});
 
-  // Check if already logged in
-  onAuthStateChanged(auth, user => {
-    if (user) window.location.href = "dashboard.html";
-  });
-
-  window.adminLogin = () => {
+// Admin login function
+window.adminLogin = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    if (!email || !password) { alert("Please enter email and password"); return; }
+
+    if(!email || !password){
+        alert("Please enter email and password");
+        return;
+    }
 
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => { 
-        alert("Login successful! Redirecting to dashboard...");
-        window.location.href = "dashboard.html"; 
-      })
-      .catch(err => alert("Login failed: " + err.message));
-  };
+        .then(() => {
+            alert("Login successful! Redirecting...");
+            window.location.href = "dashboard.html";
+        })
+        .catch(err => alert("Login failed: " + err.message));
+};
 </script>
 
 </body>
