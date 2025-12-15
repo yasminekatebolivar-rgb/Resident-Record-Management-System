@@ -18,13 +18,19 @@
     color: white;
     padding: 15px 30px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     position: relative;
     z-index: 10;
   }
 
-  header h2 { margin: 0; font-size: 20px; }
+  header h2 {
+    margin: 0;
+    font-size: 20px;
+    flex: 1;
+    text-align: center;
+  }
+
   .logout-btn {
     background: #fff;
     color: #1e906f;
@@ -36,13 +42,18 @@
   }
 
   /* HAMBURGER BUTTON */
+  .hamburger-container {
+    width: 50px; /* dedicated space */
+    display: flex;
+    justify-content: flex-start;
+  }
+
   .hamburger {
     font-size: 24px;
     cursor: pointer;
     background: none;
     border: none;
     color: white;
-    margin-right: 15px;
   }
 
   /* SIDEBAR */
@@ -53,7 +64,7 @@
     color: white;
     position: fixed;
     top: 0;
-    left: -250px; /* hidden initially */
+    left: -250px;
     transition: 0.3s;
     padding-top: 60px;
     z-index: 1000;
@@ -68,9 +79,7 @@
     transition: 0.2s;
   }
 
-  .sidebar a:hover {
-    background: #3ac17f;
-  }
+  .sidebar a:hover { background: #3ac17f; }
 
   .close-btn {
     position: absolute;
@@ -83,7 +92,7 @@
     color: white;
   }
 
-  /* MAIN CONTAINER */
+  /* MAIN CONTENT */
   .main-container {
     padding: 30px;
     max-width: 1300px;
@@ -148,21 +157,20 @@
   .edit-btn { background: #ffb74d; color: white; }
   .delete-btn { background: #e57373; color: white; }
 
-  /* SEARCH INPUT */
   #searchInput {
     width: 250px;
     padding: 10px;
     border-radius: 20px;
     border: 1px solid #ccc;
   }
-
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
-  <button class="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
+  <div class="hamburger-container">
+    <button class="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
+  </div>
   <h2>RRMS Admin Dashboard</h2>
   <button class="logout-btn" onclick="logout()">Logout</button>
 </header>
@@ -178,9 +186,7 @@
 
 <!-- MAIN CONTENT -->
 <div class="main-container">
-
   <div class="dashboard-grid">
-    <!-- LEFT: ADD / EDIT RESIDENT -->
     <div class="card">
       <h3 id="formTitle">Add Resident</h3>
       <form id="residentForm">
@@ -204,7 +210,6 @@
       </form>
     </div>
 
-    <!-- RIGHT: LIST -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h3>Resident Records</h3>
@@ -228,10 +233,8 @@
       </table>
     </div>
   </div>
-
 </div>
 
-<!-- FIREBASE SCRIPT (same as your previous setup) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
   import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
@@ -340,7 +343,7 @@
   // SIDEBAR FUNCTIONS
   function openSidebar(){ document.getElementById("sidebar").style.left = "0"; }
   function closeSidebar(){ document.getElementById("sidebar").style.left = "-250px"; }
-
 </script>
+
 </body>
 </html>
