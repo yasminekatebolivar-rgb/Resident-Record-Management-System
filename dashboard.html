@@ -35,6 +35,8 @@
 
     .container {
       padding: 30px;
+      max-width: 1200px;
+      margin: auto;
     }
 
     .card {
@@ -88,7 +90,7 @@
     table th {
       background: #f1f1f1;
     }
-    .action-btn { padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; margin-right: 5px; }
+    .action-btn { padding: 6px 12px; border-radius: 12px; border: none; cursor: pointer; margin-right: 5px; font-weight: 600  }
     .edit-btn { background: #ffb74d; color: white; }
     .delete-btn { background: #e57373; color: white; }
     #searchInput { margin-bottom: 15px; padding: 10px; width: 100%; border-radius: 8px; border: 1px solid #ccc; }
@@ -245,15 +247,12 @@
   searchInput.addEventListener("input", () => {
     const filter = searchInput.value.toLowerCase();
     table.querySelectorAll("tr").forEach(row => {
-      const fullname = row.cells[0].textContent.toLowerCase();
-      const household = row.cells[3].textContent.toLowerCase();
-      if (fullname.includes(filter) || household.includes(filter)) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
+      const fullnameText = row.cells[0].textContent.toLowerCase();
+      const householdText = row.cells[3].textContent.toLowerCase();
+      row.style.display = (fullnameText.includes(filter) || householdText.includes(filter)) ? "" : "none";
     });
   });
+
   
 </script>
   
