@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RRMS Admin Dashboard</title>
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+
+    header {
+      background: #1e906f;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 { margin: 0; }
+
+    .logout-btn {
+      background: #fff;
+      color: #1e906f;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+    }
+
+    h3 { margin-top: 0; }
+
+    form input, form select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    form button {
+      background: #1e906f;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table th, table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    table th {
+      background: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h2>RRMS Admin Dashboard</h2>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+  <!-- ADD RESIDENT -->
+  <div class="card">
+    <h3>Add Resident</h3>
+    <form id="residentForm">
+      <input type="text" id="fullname" placeholder="Full Name" required />
+      <input type="number" id="age" placeholder="Age" required />
+      <select id="gender" required>
+        <option value="">Select Gender</option>
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+      <input type="text" id="household" placeholder="Household" required />
+      <button type="submit">Save Resident</button>
+    </form>
+  </div>
+
+  <!-- RESIDENT LIST -->
+  <div class="card">
+    <h3>Resident List</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Household</th>
+        </tr>
+      </thead>
+      <tbody id="residentTable"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- FIREBASE -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
+    authDomain: "resident-management-syst-15b46.firebaseapp.com",
+    projectId: "resident-management-syst-15b46",
+    storageBucket: "resident-management-syst-15b46.firebasestorage.app",
+    messagingSenderId: "459740472804",
+    appId: "1:459740472804:web:9d4c58fac471837a1153f1"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, user => {
+    if (!user) window.location.href = "index.html";
+  });
+
+  document.getElementById("residentForm").addEventListener("submit", async e => {
+    e.preventDefault();
+
+    await addDoc(collection(db, "residents"), {
+      fullname: fullname.value,
+      age: age.value,
+      gender: gender.value,
+      household: household.value,
+      createdAt: new Date()
+    });
+
+    e.target.reset();
+  });
+
+    const table = document.getElementById("residentTable");
+  onSnapshot(collection(db, "residents"), snapshot => {
+    table.innerHTML = "";
+    snapshot.forEach(doc => {
+      const r = doc.data();
+      table.innerHTML += `
+        <tr>
+          <td>${r.fullname}</td>
+          <td>${r.age}</td>
+          <td>${r.gender}</td>
+          <td>${r.household}</td>
+        </tr>`;
+    });
+  });
+
+  window.logout = () => signOut(auth).then(() => location.href = "index.html");
+</script>
+  
+
+</body>
+</html>
