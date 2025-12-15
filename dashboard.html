@@ -16,7 +16,7 @@
   .hamburger-container {
     position: fixed;
     top: 20px;
-    left: 10px; /* small dedicated space */
+    left: 20px;
     z-index: 1001;
   }
 
@@ -34,14 +34,15 @@
   .sidebar {
     height: 100%;
     width: 250px;
-    background: #1e906f;
+    background: linear-gradient(to bottom, #1e906f, #3ac17f);
     color: white;
     position: fixed;
     top: 0;
-    left: -250px;
+    left: -250px; /* hidden by default */
     transition: 0.3s;
     padding-top: 60px;
     z-index: 1000;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
   }
 
   .sidebar a {
@@ -53,7 +54,7 @@
     transition: 0.2s;
   }
 
-  .sidebar a:hover { background: #3ac17f; }
+  .sidebar a:hover { background: rgba(255,255,255,0.1); }
 
   .close-btn {
     position: absolute;
@@ -68,7 +69,7 @@
 
   /* MAIN CONTENT */
   .main-container {
-    padding: 30px 30px 30px 70px; /* leave space for hamburger */
+    padding: 30px 30px 30px 70px; /* space for hamburger button */
     max-width: 1300px;
     margin: auto;
   }
@@ -320,6 +321,5 @@
   function closeSidebar(){ document.getElementById("sidebar").style.left = "-250px"; }
 
 </script>
-
 </body>
 </html>
