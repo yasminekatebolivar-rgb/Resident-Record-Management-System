@@ -817,7 +817,38 @@ button:hover { background-color: #38b589;
   function closeModal(){ document.getElementById('loginModal').style.display='none'; }
   window.onclick = e => { if(e.target==document.getElementById('loginModal')) closeModal(); }
 </script>
+ 
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+  import { 
+   getFirestore,
+   collection,
+   addDoc,
+   getDocs
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
+    authDomain: "resident-management-syst-15b46.firebaseapp.com",
+    projectId: "resident-management-syst-15b46",
+    storageBucket: "resident-management-syst-15b46.firebasestorage.app",
+    messagingSenderId: "459740472804",
+    appId: "1:459740472804:web:9d4c58fac471837a1153f1"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.auth = auth;
+  window.db = db;
+</script>
 
 </body>
 </html>
