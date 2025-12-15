@@ -66,6 +66,14 @@
       width: 100%;
     }
 
+    #searchInput {
+      margin-bottom: 15px;
+      padding: 10px;
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -166,6 +174,7 @@
   const gender = document.getElementById("gender");
   const household = document.getElementById("household");
   const table = document.getElementById("residentTable");
+  const searchInput = document.getElementById("searchInput");
 
   let currentEditId = null; // track editing
 
@@ -232,6 +241,19 @@
 
   // Logout
   window.logout = () => signOut(auth).then(() => location.href = "index.html");
+
+  searchInput.addEventListener("input", () => {
+    const filter = searchInput.value.toLowerCase();
+    table.querySelectorAll("tr").forEach(row => {
+      const fullname = row.cells[0].textContent.toLowerCase();
+      const household = row.cells[3].textContent.toLowerCase();
+      if (fullname.includes(filter) || household.includes(filter)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  });
   
 </script>
   
