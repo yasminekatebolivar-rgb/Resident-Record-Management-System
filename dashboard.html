@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
 <style>
-/* ===== GLOBAL ===== */
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -16,12 +15,12 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== HAMBURGER BUTTON (FIXED SPACE) ===== */
+/* HAMBURGER */
 .hamburger-container {
   position: fixed;
   top: 20px;
   left: 20px;
-  z-index: 1200;
+  z-index: 1500;
 }
 
 .hamburger {
@@ -34,7 +33,7 @@ body {
   cursor: pointer;
 }
 
-/* ===== SIDEBAR ===== */
+/* SIDEBAR */
 .sidebar {
   position: fixed;
   top: 0;
@@ -44,7 +43,7 @@ body {
   background: linear-gradient(to bottom, #1e906f, #3ac17f);
   color: white;
   transition: 0.3s;
-  z-index: 1100;
+  z-index: 1400;
   padding-top: 60px;
   box-shadow: 2px 0 8px rgba(0,0,0,0.25);
 }
@@ -73,14 +72,14 @@ body {
   cursor: pointer;
 }
 
-/* ===== MAIN CONTENT ===== */
+/* MAIN CONTENT */
 .main-container {
   padding: 40px 30px 30px 90px;
   max-width: 1400px;
   margin: auto;
 }
 
-/* ===== DASHBOARD GRID ===== */
+/* GRID */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -94,11 +93,9 @@ body {
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-h3 {
-  margin-top: 0;
-}
+h3 { margin-top:0; }
 
-/* ===== FORM ===== */
+/* FORM */
 form input, form select {
   width: 100%;
   padding: 10px;
@@ -118,7 +115,7 @@ form button {
   cursor: pointer;
 }
 
-/* ===== TABLE ===== */
+/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -131,11 +128,9 @@ table th, table td {
   vertical-align: middle;
 }
 
-table th {
-  background: #f1f1f1;
-}
+table th { background: #f1f1f1; }
 
-/* ===== ACTION BUTTONS ===== */
+/* ACTION BUTTONS */
 .action-btn {
   padding: 6px 14px;
   border-radius: 20px;
@@ -145,17 +140,10 @@ table th {
   margin-right: 6px;
 }
 
-.edit-btn {
-  background: #ffb74d;
-  color: white;
-}
+.edit-btn { background:#ffb74d; color:white; }
+.delete-btn { background:#e57373; color:white; }
 
-.delete-btn {
-  background: #e57373;
-  color: white;
-}
-
-/* ===== SEARCH ===== */
+/* SEARCH */
 #searchInput {
   width: 250px;
   padding: 10px;
@@ -163,56 +151,25 @@ table th {
   border: 1px solid #ccc;
 }
 
-/* ===== DASHBOARD CARDS ===== */
-.dashboard-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  margin-bottom: 30px;
-}
-
+/* DASHBOARD CARDS */
+.dashboard-cards { display:flex; flex-wrap:wrap; gap:20px; margin-bottom:30px; }
 .dashboard-card {
   flex: 1 1 200px;
   background: linear-gradient(135deg, #1e906f, #3ac17f);
-  color: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  text-align: center;
+  color:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  text-align:center;
 }
+.dashboard-card h4 { margin:0; font-size:14px; opacity:0.9; }
+.dashboard-card p { margin:10px 0 0 0; font-size:24px; font-weight:700; }
 
-.dashboard-card h4 {
-  margin: 0;
-  font-size: 14px;
-  opacity: 0.9;
-}
-
-.dashboard-card p {
-  margin: 10px 0 0 0;
-  font-size: 24px;
-  font-weight: 700;
-}
-
-/* ===== CHARTS & RECENT ACTIVITY ===== */
-.chart-card, .activity-card {
-  margin-bottom: 20px;
-}
-
-.chart-card canvas {
-  width: 100% !important;
-  max-height: 250px;
-}
-
-.activity-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.activity-card li {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-}
+/* CHARTS & RECENT ACTIVITY */
+.chart-card, .activity-card { margin-bottom:20px; }
+.chart-card canvas { width:100% !important; max-height:250px; }
+.activity-card ul { list-style:none; padding:0; margin:0; }
+.activity-card li { padding:8px 0; border-bottom:1px solid #eee; }
 </style>
 </head>
 
@@ -220,7 +177,7 @@ table th {
 
 <!-- HAMBURGER -->
 <div class="hamburger-container">
-  <button class="hamburger" onclick="openSidebar()">
+  <button class="hamburger" onclick="toggleSidebar()">
     <i class="fas fa-bars"></i>
   </button>
 </div>
@@ -239,7 +196,7 @@ table th {
 <div class="main-container">
 
   <!-- DASHBOARD VIEW -->
-  <div id="dashboardView">
+  <div id="dashboardView" style="display:none;">
     <div class="dashboard-cards">
       <div class="dashboard-card">
         <h4>Total Residents</h4>
@@ -282,8 +239,8 @@ table th {
     </div>
   </div>
 
-  <!-- RESIDENTS VIEW -->
-  <div id="residentsView" style="display:none;">
+  <!-- RESIDENTS VIEW (Default) -->
+  <div id="residentsView">
     <div class="dashboard-grid">
 
       <!-- FORM -->
@@ -333,12 +290,11 @@ table th {
 
 </div>
 
-<!-- ===== FIREBASE + LOGIC ===== -->
+<!-- FIREBASE + LOGIC -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
+import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.esm.min.js';
 
 const firebaseConfig = {
@@ -361,19 +317,26 @@ const table = document.getElementById("residentTable");
 const searchInput = document.getElementById("searchInput");
 let editId = null;
 
-// MENU SWITCHING
 const dashboardView = document.getElementById("dashboardView");
 const residentsView = document.getElementById("residentsView");
 
+// MENU SWITCHING
 window.showDashboard = () => { dashboardView.style.display="block"; residentsView.style.display="none"; updateDashboard(); closeSidebar(); }
 window.showResidents = () => { dashboardView.style.display="none"; residentsView.style.display="block"; closeSidebar(); }
+
+// HAMBURGER TOGGLE
+window.toggleSidebar = () => {
+  const sidebar = document.getElementById("sidebar");
+  sidebar.style.left = sidebar.style.left === "0px" ? "-260px" : "0px";
+}
+window.closeSidebar = () => document.getElementById("sidebar").style.left="-260px";
 
 // FORM SUBMIT
 form.addEventListener("submit", async e => {
   e.preventDefault();
   const data = {
     fullname: fullname.value,
-    age: age.value,
+    age: parseInt(age.value),
     gender: gender.value,
     civilStatus: civilStatus.value,
     contact: contact.value,
@@ -385,7 +348,7 @@ form.addEventListener("submit", async e => {
          : await addDoc(collection(db,"residents"),data);
   form.reset();
   editId = null;
-  formTitle.innerText = "Add Resident";
+  formTitle.innerText="Add Resident";
 });
 
 // FIREBASE SNAPSHOT
@@ -393,42 +356,36 @@ onSnapshot(collection(db,"residents"), snap => {
   table.innerHTML="";
   const recentActivity = document.getElementById("recentActivity");
   recentActivity.innerHTML="";
-  let residents = snap.docs.map(d => ({id:d.id, ...d.data()}));
-  residents.forEach(r => {
-    // Table
+  const residents = snap.docs.map(d => ({id:d.id, ...d.data()}));
+
+  residents.forEach(r=>{
     table.innerHTML+=`
-    <tr>
-      <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
-      <td>${r.civilStatus}</td><td>${r.contact}</td>
-      <td>${r.purok}</td><td>${r.household}</td>
-      <td>
-        <button class="action-btn edit-btn" onclick="editResident('${r.id}',${JSON.stringify(r).replace(/"/g,'&quot;')})">Edit</button>
-        <button class="action-btn delete-btn" onclick="deleteResident('${r.id}')">Delete</button>
-      </td>
-    </tr>`;
-    // Recent activity
+      <tr>
+        <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+        <td>${r.civilStatus}</td><td>${r.contact}</td>
+        <td>${r.purok}</td><td>${r.household}</td>
+        <td>
+          <button class="action-btn edit-btn" onclick="editResident('${r.id}',${JSON.stringify(r).replace(/"/g,'&quot;')})">Edit</button>
+          <button class="action-btn delete-btn" onclick="deleteResident('${r.id}')">Delete</button>
+        </td>
+      </tr>`;
+
+    // Recent Activity
     recentActivity.innerHTML+=`<li>${r.fullname} added on ${r.createdAt.toDate ? r.createdAt.toDate().toLocaleString() : new Date(r.createdAt.seconds*1000).toLocaleString()}</li>`;
   });
   updateDashboardCharts(residents);
 });
 
 // EDIT / DELETE
-window.editResident=(id,r)=>{
-  Object.keys(r).forEach(k=>document.getElementById(k).value=r[k]);
+window.editResident = (id,r) => {
+  Object.keys(r).forEach(k => document.getElementById(k).value=r[k]);
   editId=id;
   formTitle.innerText="Edit Resident";
-};
-
-window.deleteResident=id=>{
-  if(confirm("Delete this resident?")) deleteDoc(doc(db,"residents",id));
-};
+}
+window.deleteResident = id => { if(confirm("Delete this resident?")) deleteDoc(doc(db,"residents",id)); }
 
 // LOGOUT
-window.logout=()=>signOut(auth).then(()=>location.href="index.html");
-
-// SIDEBAR
-window.openSidebar=()=>document.getElementById("sidebar").style.left="0";
-window.closeSidebar=()=>document.getElementById("sidebar").style.left="-260px";
+window.logout = () => signOut(auth).then(()=>location.href="index.html");
 
 // SEARCH
 searchInput.addEventListener("input",()=>{
@@ -437,77 +394,38 @@ searchInput.addEventListener("input",()=>{
 });
 
 // DASHBOARD LOGIC
-function updateDashboard() {
-  // Will trigger snapshot listener and render charts
-}
-
-// CHART.JS
 let ageChart, civilChart, purokChart;
 function updateDashboardCharts(residents){
-  // Summary cards
-  document.getElementById("totalResidents").innerText = residents.length;
-  const households = [...new Set(residents.map(r=>r.household))];
-  document.getElementById("totalHouseholds").innerText = households.length;
-  document.getElementById("maleResidents").innerText = residents.filter(r=>r.gender==='Male').length;
-  document.getElementById("femaleResidents").innerText = residents.filter(r=>r.gender==='Female').length;
+  document.getElementById("totalResidents").innerText=residents.length;
+  const households=[...new Set(residents.map(r=>r.household))];
+  document.getElementById("totalHouseholds").innerText=households.length;
+  document.getElementById("maleResidents").innerText=residents.filter(r=>r.gender==='Male').length;
+  document.getElementById("femaleResidents").innerText=residents.filter(r=>r.gender==='Female').length;
 
-  // Age Groups
-  const ageGroups = {Children:0, Youth:0, Adults:0, Seniors:0};
-  residents.forEach(r=>{
-    if(r.age<=12) ageGroups.Children++;
-    else if(r.age<=24) ageGroups.Youth++;
-    else if(r.age<=59) ageGroups.Adults++;
-    else ageGroups.Seniors++;
-  });
-  const civilStatusCount = {Single:0, Married:0, Widowed:0};
+  const ageGroups={Children:0, Youth:0, Adults:0, Seniors:0};
+  residents.forEach(r=>{ if(r.age<=12) ageGroups.Children++; else if(r.age<=24) ageGroups.Youth++; else if(r.age<=59) ageGroups.Adults++; else ageGroups.Seniors++; });
+  const civilStatusCount={Single:0, Married:0, Widowed:0};
   residents.forEach(r=>civilStatusCount[r.civilStatus]++);
+  const purokCount={};
+  residents.forEach(r=>{ if(!purokCount[r.purok]) purokCount[r.purok]=0; purokCount[r.purok]++; });
 
-  // Purok counts
-  const purokCount = {};
-  residents.forEach(r=>{
-    if(!purokCount[r.purok]) purokCount[r.purok]=0;
-    purokCount[r.purok]++;
-  });
-
-  // Age chart
-  const ageCtx = document.getElementById('ageChart').getContext('2d');
+  const ageCtx=document.getElementById('ageChart').getContext('2d');
   if(ageChart) ageChart.destroy();
-  ageChart = new Chart(ageCtx,{
-    type:'bar',
-    data:{
-      labels:Object.keys(ageGroups),
-      datasets:[{label:'Residents', data:Object.values(ageGroups), backgroundColor:'#1e906f'}]
-    },
-    options:{responsive:true, plugins:{legend:{display:false}}}
-  });
+  ageChart=new Chart(ageCtx,{type:'bar', data:{labels:Object.keys(ageGroups), datasets:[{label:'Residents', data:Object.values(ageGroups), backgroundColor:'#1e906f'}]}, options:{responsive:true, plugins:{legend:{display:false}}}});
 
-  // Civil status chart
-  const civilCtx = document.getElementById('civilChart').getContext('2d');
+  const civilCtx=document.getElementById('civilChart').getContext('2d');
   if(civilChart) civilChart.destroy();
-  civilChart = new Chart(civilCtx,{
-    type:'pie',
-    data:{
-      labels:Object.keys(civilStatusCount),
-      datasets:[{label:'Residents', data:Object.values(civilStatusCount), backgroundColor:['#1e906f','#3ac17f','#a3d8b3'] }]
-    },
-    options:{responsive:true}
-  });
+  civilChart=new Chart(civilCtx,{type:'pie', data:{labels:Object.keys(civilStatusCount), datasets:[{label:'Residents', data:Object.values(civilStatusCount), backgroundColor:['#1e906f','#3ac17f','#a3d8b3']}]}, options:{responsive:true}});
 
-  // Purok chart
-  const purokCtx = document.getElementById('purokChart').getContext('2d');
+  const purokCtx=document.getElementById('purokChart').getContext('2d');
   if(purokChart) purokChart.destroy();
-  purokChart = new Chart(purokCtx,{
-    type:'bar',
-    data:{
-      labels:Object.keys(purokCount),
-      datasets:[{label:'Residents', data:Object.values(purokCount), backgroundColor:'#1e906f'}]
-    },
-    options:{responsive:true, plugins:{legend:{display:false}}}
-  });
+  purokChart=new Chart(purokCtx,{type:'bar', data:{labels:Object.keys(purokCount), datasets:[{label:'Residents', data:Object.values(purokCount), backgroundColor:'#1e906f'}]}, options:{responsive:true, plugins:{legend:{display:false}}}});
 }
+
+// Show Residents view by default
+showResidents();
 </script>
 
-<!-- Chart.js CDN for charts -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
