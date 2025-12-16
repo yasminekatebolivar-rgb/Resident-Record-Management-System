@@ -43,10 +43,9 @@ body {
   height: 100%;
   background: linear-gradient(to bottom, #1e906f, #3ac17f);
   color: white;
-  transition: 0.3s ease;
+  transition: 0.3s;
   z-index: 1100;
   padding-top: 60px;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.25);
 }
 
 .sidebar a {
@@ -55,10 +54,6 @@ body {
   color: white;
   text-decoration: none;
   font-weight: 500;
-}
-
-.sidebar a i {
-  margin-right: 10px;
 }
 
 .sidebar a:hover {
@@ -76,28 +71,53 @@ body {
   cursor: pointer;
 }
 
-/* ===== MAIN CONTENT ===== */
+/* ===== MAIN ===== */
 .main-container {
   padding: 40px 30px 30px 90px;
   max-width: 1400px;
   margin: auto;
 }
 
+/* ===== DASHBOARD ===== */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 14px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+.stat-card h2 {
+  margin: 0;
+  color: #1e906f;
+  font-size: 34px;
+}
+
+.stat-card p {
+  margin-top: 8px;
+  color: #555;
+  font-weight: 500;
+}
+
+/* ===== RESIDENT GRID ===== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 380px 1fr;
   gap: 30px;
 }
 
-/* ===== CARDS ===== */
 .card {
   background: white;
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
-
-h3 { margin-top: 0; }
 
 /* ===== FORM ===== */
 form input, form select {
@@ -128,11 +148,11 @@ table {
 table th, table td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
-  text-align: left;
-  vertical-align: middle;
 }
 
-table th { background: #f1f1f1; }
+table th {
+  background: #f1f1f1;
+}
 
 /* ===== ACTION BUTTONS ===== */
 .action-btn {
@@ -155,9 +175,9 @@ table th { background: #f1f1f1; }
   border: 1px solid #ccc;
 }
 
-/* ===== SECTIONS ===== */
-section { display: none; }
-section.active { display: block; }
+/* ===== HIDE SECTIONS ===== */
+.section { display: none; }
+.section.active { display: block; }
 </style>
 </head>
 
@@ -173,116 +193,87 @@ section.active { display: block; }
 <!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <button class="close-btn" onclick="closeSidebar()">&times;</button>
-
-  
-
-  <a href="#" onclick="showSection('residents')">
-    <i class="fas fa-users"></i> Residents
-  </a>
-
-  <a href="#" onclick="showSection('dashboard')">
-    <i class="fas fa-chart-line"></i> Dashboard
-  </a>
-
-  <a href="#" onclick="showSection('reports')">
-    <i class="fas fa-file-alt"></i> Reports
-  </a>
-
-  <a href="#" onclick="showSection('settings')">
-    <i class="fas fa-cog"></i> Settings
-  </a>
-
-  <a href="#" onclick="logout()">
-    <i class="fas fa-sign-out-alt"></i> Logout
-  </a>
+  <a onclick="showSection('dashboard')">Dashboard</a>
+  <a onclick="showSection('residents')">Residents</a>
+  <a onclick="logout()">Logout</a>
 </div>
 
 <!-- MAIN -->
 <div class="main-container">
 
-
-
-<!-- RESIDENTS -->
-<section id="residentsSection" class="active">
-  <div class="dashboard-grid">
-
-    <!-- FORM -->
-    <div class="card">
-      <h3 id="formTitle">Add Resident</h3>
-      <form id="residentForm">
-        <input id="fullname" placeholder="Full Name" required>
-        <input id="age" type="number" placeholder="Age" required>
-
-        <select id="gender" required>
-          <option value="">Gender</option>
-          <option>Male</option>
-          <option>Female</option>
-        </select>
-
-        <select id="civilStatus" required>
-          <option value="">Civil Status</option>
-          <option>Single</option>
-          <option>Married</option>
-          <option>Widowed</option>
-        </select>
-
-        <input id="contact" placeholder="Contact Number" required>
-        <input id="purok" placeholder="Purok / Zone" required>
-        <input id="household" placeholder="Household" required>
-
-        <button type="submit">Save Resident</button>
-      </form>
+  <!-- DASHBOARD SECTION -->
+  <div id="dashboard" class="section active">
+    <h2>Dashboard Overview</h2>
+    <div class="dashboard-cards">
+      <div class="stat-card">
+        <h2 id="totalResidents">0</h2>
+        <p>Total Residents</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="totalHouseholds">0</h2>
+        <p>Total Households</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="maleCount">0</h2>
+        <p>Male</p>
+      </div>
+      <div class="stat-card">
+        <h2 id="femaleCount">0</h2>
+        <p>Female</p>
+      </div>
     </div>
+  </div>
 
-    <!-- TABLE -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-        <h3>Resident Records</h3>
-        <input id="searchInput" placeholder="Search...">
+  <!-- RESIDENT SECTION -->
+  <div id="residents" class="section">
+    <div class="dashboard-grid">
+
+      <div class="card">
+        <h3 id="formTitle">Add Resident</h3>
+        <form id="residentForm">
+          <input id="fullname" placeholder="Full Name" required>
+          <input id="age" type="number" placeholder="Age" required>
+          <select id="gender" required>
+            <option value="">Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+          <select id="civilStatus" required>
+            <option value="">Civil Status</option>
+            <option>Single</option>
+            <option>Married</option>
+            <option>Widowed</option>
+          </select>
+          <input id="contact" placeholder="Contact Number" required>
+          <input id="purok" placeholder="Purok / Zone" required>
+          <input id="household" placeholder="Household" required>
+          <button type="submit">Save Resident</button>
+        </form>
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th><th>Age</th><th>Gender</th>
-            <th>Status</th><th>Contact</th>
-            <th>Purok</th><th>Household</th><th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="residentTable"></tbody>
-      </table>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+          <h3>Resident Records</h3>
+          <input id="searchInput" placeholder="Search...">
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Age</th><th>Gender</th>
+              <th>Status</th><th>Contact</th>
+              <th>Purok</th><th>Household</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="residentTable"></tbody>
+        </table>
+      </div>
+
     </div>
-
   </div>
-</section>
-  
-<!-- DASHBOARD -->
-<section id="dashboardSection">
-  <div class="card">
-    <h3>Dashboard Overview</h3>
-    <p>Summary statistics will be displayed here.</p>
-  </div>
-</section>
-  
-<!-- REPORTS -->
-<section id="reportsSection">
-  <div class="card">
-    <h3>Reports</h3>
-    <p>Printable reports will be available here.</p>
-  </div>
-</section>
-
-<!-- SETTINGS -->
-<section id="settingsSection">
-  <div class="card">
-    <h3>Settings</h3>
-    <p>System configuration options.</p>
-  </div>
-</section>
 
 </div>
 
-<!-- ===== FIREBASE + LOGIC ===== -->
+<!-- ===== FIREBASE ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
@@ -304,72 +295,52 @@ const db = getFirestore(app);
 
 onAuthStateChanged(auth, u => { if(!u) location.href="index.html"; });
 
-const form = residentForm;
-let editId = null;
+const form = document.getElementById("residentForm");
+const table = document.getElementById("residentTable");
+let editId=null;
 
-form.onsubmit = async e => {
-  e.preventDefault();
-  const data = {
-    fullname: fullname.value,
-    age: age.value,
-    gender: gender.value,
-    civilStatus: civilStatus.value,
-    contact: contact.value,
-    purok: purok.value,
-    household: household.value
-  };
-  editId
-    ? await updateDoc(doc(db,"residents",editId),data)
-    : await addDoc(collection(db,"residents"),data);
-  form.reset();
-  editId = null;
-  formTitle.innerText = "Add Resident";
-};
+onSnapshot(collection(db,"residents"), snap=>{
+  table.innerHTML="";
+  let male=0,female=0,households=new Set();
+  document.getElementById("totalResidents").innerText=snap.size;
 
-onSnapshot(collection(db,"residents"), snap => {
-  residentTable.innerHTML="";
   snap.forEach(d=>{
     const r=d.data();
-    residentTable.innerHTML+=`
-    <tr>
-      <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
-      <td>${r.civilStatus}</td><td>${r.contact}</td>
-      <td>${r.purok}</td><td>${r.household}</td>
-      <td>
-        <button class="action-btn edit-btn" onclick='editResident("${d.id}",${JSON.stringify(r)})'>Edit</button>
-        <button class="action-btn delete-btn" onclick='deleteResident("${d.id}")'>Delete</button>
-      </td>
-    </tr>`;
+    r.gender==="Male"?male++:female++;
+    households.add(r.household);
+    table.innerHTML+=`
+      <tr>
+        <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+        <td>${r.civilStatus}</td><td>${r.contact}</td>
+        <td>${r.purok}</td><td>${r.household}</td>
+        <td>
+          <button class="action-btn edit-btn" onclick="editResident('${d.id}',${JSON.stringify(r).replace(/"/g,'&quot;')})">Edit</button>
+          <button class="action-btn delete-btn" onclick="deleteResident('${d.id}')">Delete</button>
+        </td>
+      </tr>`;
   });
+
+  maleCount.innerText=male;
+  femaleCount.innerText=female;
+  totalHouseholds.innerText=households.size;
 });
 
-window.editResident=(id,r)=>{
-  Object.keys(r).forEach(k=>document.getElementById(k).value=r[k]);
-  editId=id;
-  formTitle.innerText="Edit Resident";
-};
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const data={fullname:fullname.value,age:age.value,gender:gender.value,civilStatus:civilStatus.value,contact:contact.value,purok:purok.value,household:household.value};
+  editId?await updateDoc(doc(db,"residents",editId),data):await addDoc(collection(db,"residents"),data);
+  form.reset(); editId=null;
+});
 
-window.deleteResident=id=>{
-  if(confirm("Delete resident?")) deleteDoc(doc(db,"residents",id));
-};
-
+window.editResident=(id,r)=>{Object.keys(r).forEach(k=>document.getElementById(k).value=r[k]);editId=id;};
+window.deleteResident=id=>confirm("Delete?")&&deleteDoc(doc(db,"residents",id));
 window.logout=()=>signOut(auth).then(()=>location.href="index.html");
 
 window.openSidebar=()=>sidebar.style.left="0";
 window.closeSidebar=()=>sidebar.style.left="-260px";
+window.showSection=s=>{document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.getElementById(s).classList.add("active");closeSidebar();};
 
-window.showSection=s=>{
-  document.querySelectorAll("section").forEach(sec=>sec.classList.remove("active"));
-  document.getElementById(s+"Section").classList.add("active");
-  closeSidebar();
-};
-
-searchInput.oninput=()=>{
-  const f=searchInput.value.toLowerCase();
-  [...residentTable.rows].forEach(r=>{
-    r.style.display=r.innerText.toLowerCase().includes(f)?"":"none";
-  });
-};
+searchInput.addEventListener("input",()=>{const f=searchInput.value.toLowerCase();[...table.rows].forEach(r=>r.style.display=r.innerText.toLowerCase().includes(f)?"":"none");});
 </script>
 
 </body>
