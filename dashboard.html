@@ -4,154 +4,172 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RRMS Admin Dashboard</title>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
 <style>
-  body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    background: #f4f6f8;
-    overflow-x: hidden;
-  }
+/* ===== GLOBAL ===== */
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  background: #f4f6f8;
+  overflow-x: hidden;
+}
 
-  /* HAMBURGER BUTTON */
-  .hamburger-container {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1100;
-  }
+/* ===== HAMBURGER BUTTON (FIXED SPACE) ===== */
+.hamburger-container {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1200;
+}
 
-  .hamburger {
-    font-size: 22px;
-    cursor: pointer;
-    background: #1e906f;
-    color: white;
-    border: none;
-    padding: 10px 12px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.hamburger {
+  background: #1e906f;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
 
-  /* SIDEBAR */
-  .sidebar {
-    height: 100%;
-    width: 250px;
-    background: linear-gradient(to bottom, #1e906f, #3ac17f);
-    color: white;
-    position: fixed;
-    top: 0;
-    left: -250px; /* hidden initially */
-    transition: 0.3s;
-    padding-top: 60px;
-    z-index: 1050;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
-  }
+/* ===== SIDEBAR ===== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100%;
+  background: linear-gradient(to bottom, #1e906f, #3ac17f);
+  color: white;
+  transition: 0.3s;
+  z-index: 1100;
+  padding-top: 60px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.25);
+}
 
-  .sidebar a {
-    padding: 15px 25px;
-    display: block;
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.2s;
-  }
+.sidebar a {
+  display: block;
+  padding: 15px 25px;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+}
 
-  .sidebar a:hover { background: rgba(255,255,255,0.1); }
+.sidebar a:hover {
+  background: rgba(255,255,255,0.15);
+}
 
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 22px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: white;
-  }
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
 
-  /* MAIN CONTENT */
-  .main-container {
-    padding: 30px;
-    max-width: 1300px;
-    margin: auto;
-    transition: margin-left 0.3s;
-  }
+/* ===== MAIN CONTENT ===== */
+.main-container {
+  padding: 40px 30px 30px 90px;
+  max-width: 1400px;
+  margin: auto;
+}
 
-  .dashboard-grid {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 30px;
-  }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 30px;
+}
 
-  .card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  }
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
 
-  h3 { margin-top: 0; }
+h3 {
+  margin-top: 0;
+}
 
-  form input, form select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
+/* ===== FORM ===== */
+form input, form select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
 
-  form button {
-    background: #1e906f;
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    width: 100%;
-  }
+form button {
+  width: 100%;
+  background: #1e906f;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  table th, table td {
-    padding: 12px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
-    vertical-align: middle;
-  }
+table th, table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  vertical-align: middle;
+}
 
-  table th { background: #f1f1f1; }
+table th {
+  background: #f1f1f1;
+}
 
-  .action-btn {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    margin-right: 5px;
-    display: inline-block;
-  }
-  .edit-btn { background: #ffb74d; color: white; }
-  .delete-btn { background: #e57373; color: white; }
+/* ===== ACTION BUTTONS ===== */
+.action-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin-right: 6px;
+}
 
-  #searchInput {
-    width: 250px;
-    padding: 10px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-  }
+.edit-btn {
+  background: #ffb74d;
+  color: white;
+}
+
+.delete-btn {
+  background: #e57373;
+  color: white;
+}
+
+/* ===== SEARCH ===== */
+#searchInput {
+  width: 250px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
 </style>
 </head>
+
 <body>
 
-<!-- HAMBURGER BUTTON -->
+<!-- HAMBURGER -->
 <div class="hamburger-container">
-  <button class="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
+  <button class="hamburger" onclick="openSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
 </div>
 
 <!-- SIDEBAR -->
@@ -161,61 +179,60 @@
   <a href="#">Residents</a>
   <a href="#">Reports</a>
   <a href="#">Settings</a>
+  <a href="#" onclick="logout()">Logout</a>
 </div>
 
-<!-- MAIN CONTENT -->
+<!-- MAIN -->
 <div class="main-container">
   <div class="dashboard-grid">
-    <!-- LEFT: ADD / EDIT RESIDENT -->
+
+    <!-- FORM -->
     <div class="card">
       <h3 id="formTitle">Add Resident</h3>
       <form id="residentForm">
-        <input type="text" id="fullname" placeholder="Full Name" required />
-        <input type="number" id="age" placeholder="Age" required />
+        <input id="fullname" placeholder="Full Name" required>
+        <input id="age" type="number" placeholder="Age" required>
         <select id="gender" required>
-          <option value="">Select Gender</option>
+          <option value="">Gender</option>
           <option>Male</option>
           <option>Female</option>
         </select>
         <select id="civilStatus" required>
-          <option value="">Select Civil Status</option>
+          <option value="">Civil Status</option>
           <option>Single</option>
           <option>Married</option>
           <option>Widowed</option>
         </select>
-        <input type="text" id="contact" placeholder="Contact Number" required />
-        <input type="text" id="purok" placeholder="Purok / Zone" required />
-        <input type="text" id="household" placeholder="Household" required />
+        <input id="contact" placeholder="Contact Number" required>
+        <input id="purok" placeholder="Purok / Zone" required>
+        <input id="household" placeholder="Household" required>
         <button type="submit">Save Resident</button>
       </form>
     </div>
 
-    <!-- RIGHT: RESIDENT TABLE -->
+    <!-- TABLE -->
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
         <h3>Resident Records</h3>
-        <input type="text" id="searchInput" placeholder="Search resident...">
+        <input id="searchInput" placeholder="Search...">
       </div>
 
       <table>
         <thead>
           <tr>
-            <th>Full Name</th>
-            <th>Age</th>
-            <th>Gender</th>
-            <th>Civil Status</th>
-            <th>Contact</th>
-            <th>Purok</th>
-            <th>Household</th>
-            <th>Actions</th>
+            <th>Name</th><th>Age</th><th>Gender</th>
+            <th>Status</th><th>Contact</th>
+            <th>Purok</th><th>Household</th><th>Actions</th>
           </tr>
         </thead>
         <tbody id="residentTable"></tbody>
       </table>
     </div>
+
   </div>
 </div>
 
+<!-- ===== FIREBASE + LOGIC ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
@@ -234,22 +251,13 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, user => { if(!user) window.location.href="index.html"; });
+onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; });
 
 const form = document.getElementById("residentForm");
-const fullname = document.getElementById("fullname");
-const age = document.getElementById("age");
-const gender = document.getElementById("gender");
-const civilStatus = document.getElementById("civilStatus");
-const contact = document.getElementById("contact");
-const purok = document.getElementById("purok");
-const household = document.getElementById("household");
 const table = document.getElementById("residentTable");
-const searchInput = document.getElementById("searchInput");
+let editId = null;
 
-let currentEditId = null;
-
-async function addResident(e){
+form.addEventListener("submit", async e => {
   e.preventDefault();
   const data = {
     fullname: fullname.value,
@@ -258,70 +266,55 @@ async function addResident(e){
     civilStatus: civilStatus.value,
     contact: contact.value,
     purok: purok.value,
-    household: household.value,
-    createdAt: new Date()
+    household: household.value
   };
-  if(currentEditId){
-    await updateDoc(doc(db, "residents", currentEditId), data);
-    currentEditId = null;
-  } else {
-    await addDoc(collection(db, "residents"), data);
-  }
+  editId ? await updateDoc(doc(db,"residents",editId),data)
+         : await addDoc(collection(db,"residents"),data);
   form.reset();
-  document.getElementById("formTitle").innerText = "Add Resident";
-}
+  editId = null;
+  formTitle.innerText = "Add Resident";
+});
 
-form.addEventListener("submit", addResident);
-
-onSnapshot(collection(db, "residents"), snapshot => {
-  table.innerHTML = "";
-  snapshot.forEach(docSnap => {
-    const r = docSnap.data();
-    table.innerHTML += `
-      <tr>
-        <td>${r.fullname}</td>
-        <td>${r.age}</td>
-        <td>${r.gender}</td>
-        <td>${r.civilStatus}</td>
-        <td>${r.contact}</td>
-        <td>${r.purok}</td>
-        <td>${r.household}</td>
-        <td>
-          <button class="action-btn edit-btn"
-            onclick="editResident('${docSnap.id}', '${r.fullname}', ${r.age}, '${r.gender}', '${r.civilStatus}', '${r.contact}', '${r.purok}', '${r.household}')">Edit</button>
-          <button class="action-btn delete-btn"
-            onclick="deleteResident('${docSnap.id}')">Delete</button>
-        </td>
-      </tr>`;
+onSnapshot(collection(db,"residents"), snap => {
+  table.innerHTML="";
+  snap.forEach(d=>{
+    const r=d.data();
+    table.innerHTML+=`
+    <tr>
+      <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+      <td>${r.civilStatus}</td><td>${r.contact}</td>
+      <td>${r.purok}</td><td>${r.household}</td>
+      <td>
+        <button class="action-btn edit-btn" onclick="editResident('${d.id}',${JSON.stringify(r).replace(/"/g,'&quot;')})">Edit</button>
+        <button class="action-btn delete-btn" onclick="deleteResident('${d.id}')">Delete</button>
+      </td>
+    </tr>`;
   });
 });
 
-window.editResident = (id, f, a, g, cs, c, p, h) => {
-  fullname.value = f; age.value = a; gender.value = g; civilStatus.value = cs;
-  contact.value = c; purok.value = p; household.value = h;
-  currentEditId = id;
-  document.getElementById("formTitle").innerText = "Edit Resident";
+window.editResident=(id,r)=>{
+  Object.keys(r).forEach(k=>document.getElementById(k).value=r[k]);
+  editId=id;
+  formTitle.innerText="Edit Resident";
 };
 
-window.deleteResident = async id => {
-  if(confirm("Are you sure you want to delete this resident?")){
-    await deleteDoc(doc(db, "residents", id));
-  }
+window.deleteResident=id=>{
+  if(confirm("Delete this resident?")) deleteDoc(doc(db,"residents",id));
 };
 
-window.logout = () => signOut(auth).then(() => location.href="index.html");
+window.logout=()=>signOut(auth).then(()=>location.href="index.html");
 
-searchInput.addEventListener("input", ()=>{
-  const filter = searchInput.value.toLowerCase();
-  table.querySelectorAll("tr").forEach(row => {
-    const text = Array.from(row.cells).map(td => td.textContent.toLowerCase()).join(" ");
-    row.style.display = text.includes(filter) ? "" : "none";
+/* 🔑 FIXED SIDEBAR FUNCTIONS */
+window.openSidebar=()=>document.getElementById("sidebar").style.left="0";
+window.closeSidebar=()=>document.getElementById("sidebar").style.left="-260px";
+
+/* SEARCH */
+searchInput.addEventListener("input",()=>{
+  const f=searchInput.value.toLowerCase();
+  [...table.rows].forEach(r=>{
+    r.style.display=r.innerText.toLowerCase().includes(f)?"":"none";
   });
 });
-
-// SIDEBAR FUNCTIONS
-function openSidebar(){ document.getElementById("sidebar").style.left = "0"; }
-function closeSidebar(){ document.getElementById("sidebar").style.left = "-250px"; }
 </script>
 
 </body>
