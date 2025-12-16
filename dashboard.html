@@ -174,12 +174,14 @@ section.active { display: block; }
 <div id="sidebar" class="sidebar">
   <button class="close-btn" onclick="closeSidebar()">&times;</button>
 
-  <a href="#" onclick="showSection('dashboard')">
-    <i class="fas fa-chart-line"></i> Dashboard
-  </a>
+  
 
   <a href="#" onclick="showSection('residents')">
     <i class="fas fa-users"></i> Residents
+  </a>
+
+  <a href="#" onclick="showSection('dashboard')">
+    <i class="fas fa-chart-line"></i> Dashboard
   </a>
 
   <a href="#" onclick="showSection('reports')">
@@ -198,13 +200,7 @@ section.active { display: block; }
 <!-- MAIN -->
 <div class="main-container">
 
-<!-- DASHBOARD -->
-<section id="dashboardSection">
-  <div class="card">
-    <h3>Dashboard Overview</h3>
-    <p>Summary statistics will be displayed here.</p>
-  </div>
-</section>
+
 
 <!-- RESIDENTS -->
 <section id="residentsSection" class="active">
@@ -259,7 +255,15 @@ section.active { display: block; }
 
   </div>
 </section>
-
+  
+<!-- DASHBOARD -->
+<section id="dashboardSection">
+  <div class="card">
+    <h3>Dashboard Overview</h3>
+    <p>Summary statistics will be displayed here.</p>
+  </div>
+</section>
+  
 <!-- REPORTS -->
 <section id="reportsSection">
   <div class="card">
