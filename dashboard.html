@@ -285,10 +285,14 @@ import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/fi
 import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT"
-};
+    apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
+    authDomain: "resident-management-syst-15b46.firebaseapp.com",
+    projectId: "resident-management-syst-15b46",
+    storageBucket: "resident-management-syst-15b46.firebasestorage.app",
+    messagingSenderId: "459740472804",
+    appId: "1:459740472804:web:9d4c58fac471837a1153f1"
+  };
+
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
