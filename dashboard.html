@@ -16,7 +16,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== HAMBURGER ===== */
+/* ===== HAMBURGER BUTTON (FIXED SPACE) ===== */
 .hamburger-container {
   position: fixed;
   top: 20px;
@@ -30,7 +30,7 @@ body {
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -46,6 +46,7 @@ body {
   transition: 0.3s;
   z-index: 1100;
   padding-top: 60px;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.25);
 }
 
 .sidebar a {
@@ -54,6 +55,7 @@ body {
   color: white;
   text-decoration: none;
   font-weight: 500;
+  cursor: pointer;
 }
 
 .sidebar a:hover {
@@ -71,41 +73,14 @@ body {
   cursor: pointer;
 }
 
-/* ===== MAIN ===== */
+/* ===== MAIN CONTENT ===== */
 .main-container {
   padding: 40px 30px 30px 90px;
   max-width: 1400px;
   margin: auto;
 }
 
-/* ===== DASHBOARD ===== */
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.stat-card {
-  background: white;
-  border-radius: 14px;
-  padding: 25px;
-  text-align: center;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-}
-
-.stat-card h2 {
-  margin: 0;
-  color: #1e906f;
-  font-size: 34px;
-}
-
-.stat-card p {
-  margin-top: 8px;
-  color: #555;
-  font-weight: 500;
-}
-
-/* ===== RESIDENT GRID ===== */
+/* ===== DASHBOARD GRID ===== */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 380px 1fr;
@@ -117,6 +92,10 @@ body {
   border-radius: 14px;
   padding: 20px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+h3 {
+  margin-top: 0;
 }
 
 /* ===== FORM ===== */
@@ -148,6 +127,8 @@ table {
 table th, table td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
+  text-align: left;
+  vertical-align: middle;
 }
 
 table th {
@@ -164,8 +145,15 @@ table th {
   margin-right: 6px;
 }
 
-.edit-btn { background: #ffb74d; color: white; }
-.delete-btn { background: #e57373; color: white; }
+.edit-btn {
+  background: #ffb74d;
+  color: white;
+}
+
+.delete-btn {
+  background: #e57373;
+  color: white;
+}
 
 /* ===== SEARCH ===== */
 #searchInput {
@@ -175,9 +163,56 @@ table th {
   border: 1px solid #ccc;
 }
 
-/* ===== HIDE SECTIONS ===== */
-.section { display: none; }
-.section.active { display: block; }
+/* ===== DASHBOARD CARDS ===== */
+.dashboard-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.dashboard-card {
+  flex: 1 1 200px;
+  background: linear-gradient(135deg, #1e906f, #3ac17f);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.dashboard-card h4 {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.dashboard-card p {
+  margin: 10px 0 0 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* ===== CHARTS & RECENT ACTIVITY ===== */
+.chart-card, .activity-card {
+  margin-bottom: 20px;
+}
+
+.chart-card canvas {
+  width: 100% !important;
+  max-height: 250px;
+}
+
+.activity-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-card li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
 </style>
 </head>
 
@@ -193,41 +228,65 @@ table th {
 <!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <button class="close-btn" onclick="closeSidebar()">&times;</button>
-  <a onclick="showSection('dashboard')">Dashboard</a>
-  <a onclick="showSection('residents')">Residents</a>
-  <a onclick="logout()">Logout</a>
+  <a onclick="showDashboard()">Dashboard</a>
+  <a onclick="showResidents()">Residents</a>
+  <a onclick="showReports()">Reports</a>
+  <a onclick="showSettings()">Settings</a>
+  <a href="#" onclick="logout()">Logout</a>
 </div>
 
 <!-- MAIN -->
 <div class="main-container">
 
-  <!-- DASHBOARD SECTION -->
-  <div id="dashboard" class="section active">
-    <h2>Dashboard Overview</h2>
+  <!-- DASHBOARD VIEW -->
+  <div id="dashboardView">
     <div class="dashboard-cards">
-      <div class="stat-card">
-        <h2 id="totalResidents">0</h2>
-        <p>Total Residents</p>
+      <div class="dashboard-card">
+        <h4>Total Residents</h4>
+        <p id="totalResidents">0</p>
       </div>
-      <div class="stat-card">
-        <h2 id="totalHouseholds">0</h2>
-        <p>Total Households</p>
+      <div class="dashboard-card">
+        <h4>Total Households</h4>
+        <p id="totalHouseholds">0</p>
       </div>
-      <div class="stat-card">
-        <h2 id="maleCount">0</h2>
-        <p>Male</p>
+      <div class="dashboard-card">
+        <h4>Male Residents</h4>
+        <p id="maleResidents">0</p>
       </div>
-      <div class="stat-card">
-        <h2 id="femaleCount">0</h2>
-        <p>Female</p>
+      <div class="dashboard-card">
+        <h4>Female Residents</h4>
+        <p id="femaleResidents">0</p>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="card chart-card">
+        <h3>Age Group Distribution</h3>
+        <canvas id="ageChart"></canvas>
+      </div>
+      <div class="card chart-card">
+        <h3>Civil Status Breakdown</h3>
+        <canvas id="civilChart"></canvas>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="card chart-card">
+        <h3>Residents per Purok / Zone</h3>
+        <canvas id="purokChart"></canvas>
+      </div>
+      <div class="card activity-card">
+        <h3>Recent Activity</h3>
+        <ul id="recentActivity"></ul>
       </div>
     </div>
   </div>
 
-  <!-- RESIDENT SECTION -->
-  <div id="residents" class="section">
+  <!-- RESIDENTS VIEW -->
+  <div id="residentsView" style="display:none;">
     <div class="dashboard-grid">
 
+      <!-- FORM -->
       <div class="card">
         <h3 id="formTitle">Add Resident</h3>
         <form id="residentForm">
@@ -251,8 +310,9 @@ table th {
         </form>
       </div>
 
+      <!-- TABLE -->
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
           <h3>Resident Records</h3>
           <input id="searchInput" placeholder="Search...">
         </div>
@@ -273,75 +333,181 @@ table th {
 
 </div>
 
-<!-- ===== FIREBASE ===== -->
+<!-- ===== FIREBASE + LOGIC ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+import Chart from 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.esm.min.js';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
-    authDomain: "resident-management-syst-15b46.firebaseapp.com",
-    projectId: "resident-management-syst-15b46",
-    storageBucket: "resident-management-syst-15b46.firebasestorage.app",
-    messagingSenderId: "459740472804",
-    appId: "1:459740472804:web:9d4c58fac471837a1153f1"
-  };
-
+  apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
+  authDomain: "resident-management-syst-15b46.firebaseapp.com",
+  projectId: "resident-management-syst-15b46",
+  storageBucket: "resident-management-syst-15b46.firebasestorage.app",
+  messagingSenderId: "459740472804",
+  appId: "1:459740472804:web:9d4c58fac471837a1153f1"
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, u => { if(!u) location.href="index.html"; });
+onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; });
 
 const form = document.getElementById("residentForm");
 const table = document.getElementById("residentTable");
-let editId=null;
+const searchInput = document.getElementById("searchInput");
+let editId = null;
 
-onSnapshot(collection(db,"residents"), snap=>{
-  table.innerHTML="";
-  let male=0,female=0,households=new Set();
-  document.getElementById("totalResidents").innerText=snap.size;
+// MENU SWITCHING
+const dashboardView = document.getElementById("dashboardView");
+const residentsView = document.getElementById("residentsView");
 
-  snap.forEach(d=>{
-    const r=d.data();
-    r.gender==="Male"?male++:female++;
-    households.add(r.household);
-    table.innerHTML+=`
-      <tr>
-        <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
-        <td>${r.civilStatus}</td><td>${r.contact}</td>
-        <td>${r.purok}</td><td>${r.household}</td>
-        <td>
-          <button class="action-btn edit-btn" onclick="editResident('${d.id}',${JSON.stringify(r).replace(/"/g,'&quot;')})">Edit</button>
-          <button class="action-btn delete-btn" onclick="deleteResident('${d.id}')">Delete</button>
-        </td>
-      </tr>`;
-  });
+window.showDashboard = () => { dashboardView.style.display="block"; residentsView.style.display="none"; updateDashboard(); closeSidebar(); }
+window.showResidents = () => { dashboardView.style.display="none"; residentsView.style.display="block"; closeSidebar(); }
 
-  maleCount.innerText=male;
-  femaleCount.innerText=female;
-  totalHouseholds.innerText=households.size;
-});
-
-form.addEventListener("submit",async e=>{
+// FORM SUBMIT
+form.addEventListener("submit", async e => {
   e.preventDefault();
-  const data={fullname:fullname.value,age:age.value,gender:gender.value,civilStatus:civilStatus.value,contact:contact.value,purok:purok.value,household:household.value};
-  editId?await updateDoc(doc(db,"residents",editId),data):await addDoc(collection(db,"residents"),data);
-  form.reset(); editId=null;
+  const data = {
+    fullname: fullname.value,
+    age: age.value,
+    gender: gender.value,
+    civilStatus: civilStatus.value,
+    contact: contact.value,
+    purok: purok.value,
+    household: household.value,
+    createdAt: new Date()
+  };
+  editId ? await updateDoc(doc(db,"residents",editId),data)
+         : await addDoc(collection(db,"residents"),data);
+  form.reset();
+  editId = null;
+  formTitle.innerText = "Add Resident";
 });
 
-window.editResident=(id,r)=>{Object.keys(r).forEach(k=>document.getElementById(k).value=r[k]);editId=id;};
-window.deleteResident=id=>confirm("Delete?")&&deleteDoc(doc(db,"residents",id));
+// FIREBASE SNAPSHOT
+onSnapshot(collection(db,"residents"), snap => {
+  table.innerHTML="";
+  const recentActivity = document.getElementById("recentActivity");
+  recentActivity.innerHTML="";
+  let residents = snap.docs.map(d => ({id:d.id, ...d.data()}));
+  residents.forEach(r => {
+    // Table
+    table.innerHTML+=`
+    <tr>
+      <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+      <td>${r.civilStatus}</td><td>${r.contact}</td>
+      <td>${r.purok}</td><td>${r.household}</td>
+      <td>
+        <button class="action-btn edit-btn" onclick="editResident('${r.id}',${JSON.stringify(r).replace(/"/g,'&quot;')})">Edit</button>
+        <button class="action-btn delete-btn" onclick="deleteResident('${r.id}')">Delete</button>
+      </td>
+    </tr>`;
+    // Recent activity
+    recentActivity.innerHTML+=`<li>${r.fullname} added on ${r.createdAt.toDate ? r.createdAt.toDate().toLocaleString() : new Date(r.createdAt.seconds*1000).toLocaleString()}</li>`;
+  });
+  updateDashboardCharts(residents);
+});
+
+// EDIT / DELETE
+window.editResident=(id,r)=>{
+  Object.keys(r).forEach(k=>document.getElementById(k).value=r[k]);
+  editId=id;
+  formTitle.innerText="Edit Resident";
+};
+
+window.deleteResident=id=>{
+  if(confirm("Delete this resident?")) deleteDoc(doc(db,"residents",id));
+};
+
+// LOGOUT
 window.logout=()=>signOut(auth).then(()=>location.href="index.html");
 
-window.openSidebar=()=>sidebar.style.left="0";
-window.closeSidebar=()=>sidebar.style.left="-260px";
-window.showSection=s=>{document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.getElementById(s).classList.add("active");closeSidebar();};
+// SIDEBAR
+window.openSidebar=()=>document.getElementById("sidebar").style.left="0";
+window.closeSidebar=()=>document.getElementById("sidebar").style.left="-260px";
 
-searchInput.addEventListener("input",()=>{const f=searchInput.value.toLowerCase();[...table.rows].forEach(r=>r.style.display=r.innerText.toLowerCase().includes(f)?"":"none");});
+// SEARCH
+searchInput.addEventListener("input",()=>{
+  const f=searchInput.value.toLowerCase();
+  [...table.rows].forEach(r=>{ r.style.display=r.innerText.toLowerCase().includes(f)?"":"none"; });
+});
+
+// DASHBOARD LOGIC
+function updateDashboard() {
+  // Will trigger snapshot listener and render charts
+}
+
+// CHART.JS
+let ageChart, civilChart, purokChart;
+function updateDashboardCharts(residents){
+  // Summary cards
+  document.getElementById("totalResidents").innerText = residents.length;
+  const households = [...new Set(residents.map(r=>r.household))];
+  document.getElementById("totalHouseholds").innerText = households.length;
+  document.getElementById("maleResidents").innerText = residents.filter(r=>r.gender==='Male').length;
+  document.getElementById("femaleResidents").innerText = residents.filter(r=>r.gender==='Female').length;
+
+  // Age Groups
+  const ageGroups = {Children:0, Youth:0, Adults:0, Seniors:0};
+  residents.forEach(r=>{
+    if(r.age<=12) ageGroups.Children++;
+    else if(r.age<=24) ageGroups.Youth++;
+    else if(r.age<=59) ageGroups.Adults++;
+    else ageGroups.Seniors++;
+  });
+  const civilStatusCount = {Single:0, Married:0, Widowed:0};
+  residents.forEach(r=>civilStatusCount[r.civilStatus]++);
+
+  // Purok counts
+  const purokCount = {};
+  residents.forEach(r=>{
+    if(!purokCount[r.purok]) purokCount[r.purok]=0;
+    purokCount[r.purok]++;
+  });
+
+  // Age chart
+  const ageCtx = document.getElementById('ageChart').getContext('2d');
+  if(ageChart) ageChart.destroy();
+  ageChart = new Chart(ageCtx,{
+    type:'bar',
+    data:{
+      labels:Object.keys(ageGroups),
+      datasets:[{label:'Residents', data:Object.values(ageGroups), backgroundColor:'#1e906f'}]
+    },
+    options:{responsive:true, plugins:{legend:{display:false}}}
+  });
+
+  // Civil status chart
+  const civilCtx = document.getElementById('civilChart').getContext('2d');
+  if(civilChart) civilChart.destroy();
+  civilChart = new Chart(civilCtx,{
+    type:'pie',
+    data:{
+      labels:Object.keys(civilStatusCount),
+      datasets:[{label:'Residents', data:Object.values(civilStatusCount), backgroundColor:['#1e906f','#3ac17f','#a3d8b3'] }]
+    },
+    options:{responsive:true}
+  });
+
+  // Purok chart
+  const purokCtx = document.getElementById('purokChart').getContext('2d');
+  if(purokChart) purokChart.destroy();
+  purokChart = new Chart(purokCtx,{
+    type:'bar',
+    data:{
+      labels:Object.keys(purokCount),
+      datasets:[{label:'Residents', data:Object.values(purokCount), backgroundColor:'#1e906f'}]
+    },
+    options:{responsive:true, plugins:{legend:{display:false}}}
+  });
+}
 </script>
 
+<!-- Chart.js CDN for charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
