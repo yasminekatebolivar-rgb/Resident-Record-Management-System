@@ -277,15 +277,66 @@ table th { background:#f1f1f1; }
 </div>
 
   
-  <div id="settingsView" class="view"><h2>Settings</h2></div>
+ <div id="settingsView" class="view">
+  <h2>System Settings</h2>
+
+  <div class="dashboard-grid">
+
+    <!-- A. ADMIN ACCOUNT SETTINGS -->
+    <div class="card">
+      <h3>👤 Admin Account</h3>
+
+      <label>Email</label>
+      <input id="adminEmail" disabled>
+
+      <label>Last Login</label>
+      <input id="lastLogin" disabled>
+
+      <label>New Password</label>
+      <input id="newPassword" type="password" placeholder="Enter new password">
+
+      <button onclick="changePassword()">Change Password</button>
+    </div>
+
+    <!-- B. BARANGAY CONFIGURATION -->
+    <div class="card">
+      <h3>🏘️ Barangay Configuration</h3>
+
+      <input id="barangayName" placeholder="Barangay Name">
+      <input id="municipality" placeholder="Municipality">
+      <input id="province" placeholder="Province">
+
+      <textarea id="purokList" rows="4" placeholder="Default Purok list (comma separated)"></textarea>
+
+      <button onclick="saveBarangaySettings()">Save Barangay Info</button>
+    </div>
+
+  </div>
+
+  <!-- C. SYSTEM CONTROLS -->
+  <div class="card" style="margin-top:30px;">
+    <h3>🔐 System Controls</h3>
+
+    <label>
+      <input type="checkbox" id="toggleEdit">
+      Enable Resident Editing
+    </label>
+
+    <br><br>
+
+    <button onclick="backupReminder()">Data Backup Reminder</button>
+    <button style="background:#e57373; margin-top:10px;" onclick="clearCache()">Clear Cache</button>
+  </div>
+</div>
 
 </div>
 
 <!-- ===== FIREBASE & LOGIC ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
@@ -300,7 +351,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; });
+onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; 
+  adminEmail.value = user.email;
+  lastLogin.value = user.metadata.lastSignInTime;});
 
 // Elements
 const form = document.getElementById("residentForm");
@@ -456,6 +509,27 @@ onSnapshot(collection(db,"residents"), snap=>{
   }
 });
 
+
+
+  document.getElementById("adminEmail").value = user.email;
+  document.getElementById("lastLogin").value =
+    user.metadata.lastSignInTime || "N/A";
+
+  // Load barangay settings
+  const ref = doc(db, "system", "barangay");
+  const snap = await getDoc(ref);
+
+  if (snap.exists()) {
+    const d = snap.data();
+    barangayName.value = d.barangayName || "";
+    municipality.value = d.municipality || "";
+    province.value = d.province || "";
+    purokList.value = (d.purokList || []).join(", ");
+    toggleEdit.checked = d.allowEdit ?? true;
+  }
+});
+  
+
 // Edit/Delete
 window.editResident = (id,r)=>{
   Object.keys(r).forEach(k=>{ if(document.getElementById(k)) document.getElementById(k).value = r[k]; });
@@ -478,6 +552,42 @@ window.showView = id=>{
     if(id === 'reportsView') renderReports(residents);
   });
 };
+
+
+// ===== CHANGE PASSWORD =====
+window.changePassword = async () => {
+  const pwd = newPassword.value;
+  if (pwd.length < 6) return alert("Password must be at least 6 characters");
+
+  await updatePassword(auth.currentUser, pwd);
+  alert("Password updated successfully");
+  newPassword.value = "";
+};
+
+// ===== SAVE BARANGAY SETTINGS =====
+window.saveBarangaySettings = async () => {
+  await setDoc(doc(db, "system", "barangay"), {
+    barangayName: barangayName.value,
+    municipality: municipality.value,
+    province: province.value,
+    purokList: purokList.value.split(",").map(p => p.trim()),
+    allowEdit: toggleEdit.checked,
+    updatedAt: serverTimestamp()
+  });
+  alert("Barangay settings saved");
+};
+
+// ===== SYSTEM CONTROLS =====
+window.backupReminder = () => {
+  alert("Reminder: Please backup Firestore data weekly via Firebase Console.");
+};
+
+window.clearCache = () => {
+  localStorage.clear();
+  alert("Local cache cleared");
+};
+
+  
   
 // Hamburger
 window.openSidebar = ()=>document.getElementById("sidebar").style.left="0";
