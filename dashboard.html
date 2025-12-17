@@ -1432,10 +1432,10 @@ input:checked + .slider:before {
   </div>
   <div class="sidebar-nav">
     <a onclick="showView('dashboardView')" id="nav-dashboard">
-      <i class="fas fa-chart-line"></i> Dashboard
+      <i class="fas fa-chart-line"></i> Residents
     </a>
     <a onclick="showView('residentView')" id="nav-residents" class="active">
-      <i class="fas fa-users"></i> Residents
+      <i class="fas fa-users"></i> Dashboards
     </a>
     <a onclick="showView('reportsView')" id="nav-reports">
       <i class="fas fa-file-alt"></i> Reports
@@ -1605,7 +1605,7 @@ input:checked + .slider:before {
             <th>Gender</th>
             <th>Civil Status</th>
             <th>Contact</th>
-            <th>Purok</th>
+            <th>Zone</th>
             <th>Household</th>
             <th>Status</th>
             <th>Actions</th>
@@ -1705,7 +1705,7 @@ input:checked + .slider:before {
           </select>
         </div>
         <div class="filter-group">
-          <label>Purok</label>
+          <label>Zone</label>
           <input type="text" id="reportFilterPurok" placeholder="Enter Purok">
         </div>
         <div class="filter-group">
@@ -1744,7 +1744,7 @@ input:checked + .slider:before {
               <th>Gender</th>
               <th>Civil Status</th>
               <th>Contact</th>
-              <th>Purok</th>
+              <th>Zone</th>
               <th>Household</th>
             </tr>
           </thead>
@@ -1790,7 +1790,7 @@ input:checked + .slider:before {
           <label>Province</label>
           <input type="text" id="province" placeholder="Enter Province" required>
 
-          <label>Purok List (comma-separated)</label>
+          <label>Zone List (comma-separated)</label>
           <input type="text" id="purokList" placeholder="e.g., Purok 1, Purok 2, Purok 3" required>
 
           <button type="submit"><i class="fas fa-save"></i> Save Configuration</button>
@@ -1850,7 +1850,7 @@ input:checked + .slider:before {
         <label>Contact Number *</label>
         <input type="text" id="contact" placeholder="Enter contact number" required>
 
-        <label>Purok / Zone *</label>
+        <label>Zone *</label>
         <input type="text" id="purok" placeholder="Enter purok or zone" required>
 
         <label>Household *</label>
@@ -1915,7 +1915,7 @@ input:checked + .slider:before {
         <h4>Location Details</h4>
         <div class="profile-info-grid">
           <div class="profile-info-item">
-            <div class="profile-info-label">Purok / Zone</div>
+            <div class="profile-info-label">Zone</div>
             <div class="profile-info-value" id="profilePurok">-</div>
           </div>
           <div class="profile-info-item">
