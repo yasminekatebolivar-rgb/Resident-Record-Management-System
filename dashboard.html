@@ -16,7 +16,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Hamburger */
 .hamburger-container {
   position: fixed;
   top: 20px;
@@ -33,7 +32,6 @@ body {
   cursor: pointer;
 }
 
-/* Sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -50,6 +48,7 @@ body {
   display: block;
   padding: 15px 25px;
   color: white;
+  text-decoration: none;
   cursor: pointer;
 }
 .sidebar a:hover { background: rgba(255,255,255,0.15); }
@@ -136,19 +135,26 @@ table th { background: #f1f1f1; }
 }
 .edit-btn { background: #ffb74d; color: white; }
 .delete-btn { background: #e57373; color: white; }
+
+.activity-card {
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
 </style>
 </head>
 
 <body>
 
-<!-- Hamburger -->
 <div class="hamburger-container">
   <button class="hamburger" onclick="openSidebar()">
     <i class="fas fa-bars"></i>
   </button>
 </div>
 
-<!-- Sidebar -->
 <div id="sidebar" class="sidebar">
   <button class="close-btn" onclick="closeSidebar()">&times;</button>
   <a onclick="showView('residentView')">Residents</a>
@@ -162,6 +168,7 @@ table th { background: #f1f1f1; }
 <!-- DASHBOARD -->
 <div id="dashboardView" class="view">
   <h2>Dashboard</h2>
+
   <div class="dashboard-cards">
     <div class="card-small"><h4>Total Residents</h4><p id="totalResidents">0</p></div>
     <div class="card-small"><h4>Total Households</h4><p id="totalHouseholds">0</p></div>
@@ -170,8 +177,19 @@ table th { background: #f1f1f1; }
   </div>
 
   <div class="dashboard-grid">
-    <div class="card"><canvas id="ageChart"></canvas></div>
-    <div class="card"><canvas id="statusChart"></canvas></div>
+    <div class="card">
+      <h3>Age Groups</h3>
+      <canvas id="ageChart"></canvas>
+    </div>
+    <div class="card">
+      <h3>Civil Status</h3>
+      <canvas id="statusChart"></canvas>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Recent Activity</h3>
+    <div id="recentActivity"></div>
   </div>
 </div>
 
@@ -207,7 +225,7 @@ table th { background: #f1f1f1; }
         <thead>
           <tr>
             <th>Name</th><th>Age</th><th>Gender</th><th>Status</th>
-            <th>Contact</th><th>Purok</th><th>Household</th>
+            <th>Contact</th><th>Purok</th><th>Household</th><th>Action</th>
           </tr>
         </thead>
         <tbody id="residentTable"></tbody>
@@ -234,8 +252,8 @@ table th { background: #f1f1f1; }
       <input id="barangayName" placeholder="Barangay Name">
       <input id="municipality" placeholder="Municipality">
       <input id="province" placeholder="Province">
-      <input id="purokList" placeholder="Purok list (comma separated)">
-      <button onclick="saveBarangay()">Save Barangay Info</button>
+      <input id="purokList" placeholder="Purok (comma separated)">
+      <button onclick="saveBarangay()">Save</button>
     </div>
 
     <div class="card">
@@ -249,13 +267,13 @@ table th { background: #f1f1f1; }
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
   authDomain: "resident-management-syst-15b46.firebaseapp.com",
-  projectId: "resident-management-syst-15b46"
+  projectId: "resident-management-syst-15b46",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -263,7 +281,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 onAuthStateChanged(auth, user => {
-  if (!user) location.href="index.html";
+  if (!user) location.href = "index.html";
   adminEmail.value = user.email;
   lastLogin.value = user.metadata.lastSignInTime;
 });
@@ -284,14 +302,14 @@ residentForm.addEventListener("submit", async e => {
 });
 
 onSnapshot(collection(db,"residents"), snap => {
+  const residents = snap.docs.map(d=>d.data());
   residentTable.innerHTML="";
-  snap.forEach(d=>{
-    const r=d.data();
+  residents.forEach(r=>{
     residentTable.innerHTML+=`
       <tr>
         <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
         <td>${r.civilStatus}</td><td>${r.contact}</td>
-        <td>${r.purok}</td><td>${r.household}</td>
+        <td>${r.purok}</td><td>${r.household}</td><td>-</td>
       </tr>`;
   });
 });
@@ -304,7 +322,7 @@ window.saveBarangay = async ()=>{
     purokList:purokList.value.split(","),
     updatedAt:serverTimestamp()
   });
-  alert("Barangay settings saved");
+  alert("Saved");
 };
 
 window.changePassword = async ()=>{
@@ -312,16 +330,15 @@ window.changePassword = async ()=>{
   alert("Password changed");
 };
 
-window.showView = id=>{
+window.showView=id=>{
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  closeSidebar();
 };
 
-window.openSidebar = ()=>sidebar.style.left="0";
-window.closeSidebar = ()=>sidebar.style.left="-260px";
-window.logout = ()=>signOut(auth);
-window.clearCache = ()=>{localStorage.clear();alert("Cache cleared");};
+window.openSidebar=()=>sidebar.style.left="0";
+window.closeSidebar=()=>sidebar.style.left="-260px";
+window.logout=()=>signOut(auth);
+window.clearCache=()=>{localStorage.clear();alert("Cache cleared");};
 </script>
 
 </body>
