@@ -246,8 +246,37 @@ table th { background:#f1f1f1; }
     </div>
   </div>
 
-  <!-- REPORTS VIEW -->
-  <div id="reportsView" class="view"><h2>Reports</h2></div>
+ <!-- REPORTS VIEW -->
+<div id="reportsView" class="view">
+  <h2>Reports & Analytics</h2>
+
+  <!-- Report Cards -->
+  <div class="dashboard-cards">
+    <div class="card-small">
+      <h4>Total Residents</h4>
+      <p id="reportTotalResidents">0</p>
+    </div>
+    <div class="card-small">
+      <h4>Total Puroks</h4>
+      <p id="reportTotalPuroks">0</p>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="dashboard-grid">
+    <div class="card">
+      <h3>Residents per Purok</h3>
+      <canvas id="purokChart"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Gender Distribution</h3>
+      <canvas id="genderChart"></canvas>
+    </div>
+  </div>
+</div>
+
+  
   <div id="settingsView" class="view"><h2>Settings</h2></div>
 
 </div>
@@ -354,7 +383,54 @@ function renderDashboard(residents){
       </div>`;
   });
 }
+  
+let purokChart, genderChart;
 
+function renderReports(residents){
+  // Totals
+  document.getElementById("reportTotalResidents").innerText = residents.length;
+
+  const puroks = [...new Set(residents.map(r=>r.purok))];
+  document.getElementById("reportTotalPuroks").innerText = puroks.length;
+
+  // Residents per purok
+  const purokCounts = {};
+  residents.forEach(r=>{
+    purokCounts[r.purok] = (purokCounts[r.purok] || 0) + 1;
+  });
+
+  if(purokChart) purokChart.destroy();
+  purokChart = new Chart(document.getElementById("purokChart"),{
+    type:'bar',
+    data:{
+      labels:Object.keys(purokCounts),
+      datasets:[{
+        label:'Residents',
+        data:Object.values(purokCounts),
+        backgroundColor:'#1e906f'
+      }]
+    },
+    options:{responsive:true, scales:{y:{beginAtZero:true}}}
+  });
+
+  // Gender distribution
+  const male = residents.filter(r=>r.gender==="Male").length;
+  const female = residents.filter(r=>r.gender==="Female").length;
+
+  if(genderChart) genderChart.destroy();
+  genderChart = new Chart(document.getElementById("genderChart"),{
+    type:'bar',
+    data:{
+      labels:['Male','Female'],
+      datasets:[{
+        label:'Count',
+        data:[male,female],
+        backgroundColor:['#1e906f','#3ac17f']
+      }]
+    },
+    options:{responsive:true, scales:{y:{beginAtZero:true}}}
+  });
+  }
 // Firestore listener
 onSnapshot(collection(db,"residents"), snap=>{
   const residents = snap.docs.map(d=>({id:d.id, ...d.data()}));
@@ -395,13 +471,14 @@ window.showView = id=>{
   document.getElementById(id).classList.add('active');
 
   // Render dashboard only when opened
-  if(id==='dashboardView'){
-    onSnapshot(collection(db,"residents"), snap=>{
-      renderDashboard(snap.docs.map(d=>({id:d.id,...d.data()})));
-    });
-  }
-};
+  onSnapshot(collection(db,"residents"), snap=>{
+    const residents = snap.docs.map(d=>({id:d.id,...d.data()}));
 
+    if(id === 'dashboardView') renderDashboard(residents);
+    if(id === 'reportsView') renderReports(residents);
+  });
+};
+  
 // Hamburger
 window.openSidebar = ()=>document.getElementById("sidebar").style.left="0";
 window.closeSidebar = ()=>document.getElementById("sidebar").style.left="-260px";
