@@ -98,7 +98,7 @@ body {
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-h3 { margin-top:0; }
+h3, h2 { margin-top:0; }
 
 /* ===== FORM ===== */
 form input, form select {
@@ -122,11 +122,23 @@ form button {
 
 /* ===== TABLE ===== */
 table { width:100%; border-collapse: collapse; }
-table th, table td { padding:12px; border-bottom:1px solid #ddd; text-align:left; vertical-align: middle; }
+table th, table td {
+  padding:12px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+  vertical-align: middle;
+}
 table th { background:#f1f1f1; }
 
 /* ===== ACTION BUTTONS ===== */
-.action-btn { padding:6px 14px; border-radius:20px; border:none; cursor:pointer; font-weight:600; margin-right:6px; }
+.action-btn {
+  padding:6px 14px;
+  border-radius:20px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  margin-right:6px;
+}
 .edit-btn { background:#ffb74d; color:white; }
 .delete-btn { background:#e57373; color:white; }
 
@@ -135,7 +147,16 @@ table th { background:#f1f1f1; }
 
 /* ===== DASHBOARD CARDS ===== */
 .dashboard-cards { display:flex; gap:20px; margin-bottom:30px; flex-wrap:wrap; }
-.card-small { flex:1; min-width:150px; background:#1e906f; color:white; border-radius:12px; padding:15px; text-align:center; box-shadow:0 3px 8px rgba(0,0,0,0.15); }
+.card-small {
+  flex:1;
+  min-width:150px;
+  background:#1e906f;
+  color:white;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 3px 8px rgba(0,0,0,0.15);
+}
 .card-small h4 { margin:0 0 10px; font-size:14px; }
 .card-small p { font-size:22px; margin:0; font-weight:bold; }
 
@@ -149,6 +170,16 @@ table th { background:#f1f1f1; }
   display:flex; justify-content:space-between;
 }
 .activity-time { color:#555; font-size:12px; }
+
+/* ===== REPORTS ===== */
+.report-filters { display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap; }
+.report-filters select, .report-filters input { padding:8px; border-radius:8px; border:1px solid #ccc; }
+
+.report-export { margin-bottom:15px; }
+.report-export button {
+  background:#1e906f; color:white; border:none; padding:8px 15px; border-radius:8px; cursor:pointer;
+  margin-right:5px;
+}
 </style>
 </head>
 <body>
@@ -174,7 +205,6 @@ table th { background:#f1f1f1; }
   <!-- DASHBOARD VIEW -->
   <div id="dashboardView" class="view">
     <h2>Dashboard</h2>
-
     <!-- Summary Cards -->
     <div class="dashboard-cards">
       <div class="card-small"><h4>Total Residents</h4><p id="totalResidents">0</p></div>
@@ -202,7 +232,7 @@ table th { background:#f1f1f1; }
     </div>
   </div>
 
-  <!-- RESIDENT VIEW -->
+  <!-- RESIDENT VIEW (DEFAULT) -->
   <div id="residentView" class="view active">
     <div class="dashboard-grid">
       <div class="card">
@@ -247,7 +277,55 @@ table th { background:#f1f1f1; }
   </div>
 
   <!-- REPORTS VIEW -->
-  <div id="reportsView" class="view"><h2>Reports</h2></div>
+  <div id="reportsView" class="view">
+    <h2>Reports</h2>
+    <div class="report-filters">
+      <select id="filterGender"><option value="">All Genders</option><option>Male</option><option>Female</option></select>
+      <select id="filterStatus"><option value="">All Status</option><option>Single</option><option>Married</option><option>Widowed</option></select>
+      <input id="filterPurok" placeholder="Purok / Zone">
+      <input id="filterAgeMin" type="number" placeholder="Min Age">
+      <input id="filterAgeMax" type="number" placeholder="Max Age">
+      <button onclick="applyFilters()">Apply Filters</button>
+    </div>
+    <div class="report-export">
+      <button onclick="exportCSV()">Export CSV</button>
+      <button onclick="window.print()">Print</button>
+    </div>
+    <div class="card">
+      <h3>Resident List Report</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th><th>Age</th><th>Gender</th><th>Status</th>
+            <th>Contact</th><th>Purok</th><th>Household</th>
+          </tr>
+        </thead>
+        <tbody id="reportTable"></tbody>
+      </table>
+    </div>
+    <div class="dashboard-grid" style="margin-top:20px;">
+      <div class="card">
+        <h3>Population Summary</h3>
+        <canvas id="populationChart"></canvas>
+      </div>
+      <div class="card">
+        <h3>Gender Distribution</h3>
+        <canvas id="genderChart"></canvas>
+      </div>
+    </div>
+    <div class="dashboard-grid" style="margin-top:20px;">
+      <div class="card">
+        <h3>Age Group Summary</h3>
+        <canvas id="ageReportChart"></canvas>
+      </div>
+      <div class="card">
+        <h3>Civil Status Summary</h3>
+        <canvas id="statusReportChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
   <div id="settingsView" class="view"><h2>Settings</h2></div>
 
 </div>
@@ -271,8 +349,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; });
-
 // Elements
 const form = document.getElementById("residentForm");
 const table = document.getElementById("residentTable");
@@ -284,10 +360,16 @@ const totalMale = document.getElementById("totalMale");
 const totalFemale = document.getElementById("totalFemale");
 const recentActivity = document.getElementById("recentActivity");
 
+const reportTable = document.getElementById("reportTable");
+
 let editId = null;
 let ageChart, statusChart;
+let populationChart, genderChart, ageReportChart, statusReportChart;
 
-// Add or Update Resident
+// AUTH CHECK
+onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; });
+
+// Add/Update Resident
 form.addEventListener("submit", async e=>{
   e.preventDefault();
   const data = {
@@ -307,16 +389,14 @@ form.addEventListener("submit", async e=>{
   formTitle.innerText="Add Resident";
 });
 
-// Render Dashboard
+// RENDER TABLE + DASHBOARD
 function renderDashboard(residents){
-  // Summary Cards
   totalResidents.innerText = residents.length;
   const households = [...new Set(residents.map(r=>r.household))];
   totalHouseholds.innerText = households.length;
   totalMale.innerText = residents.filter(r=>r.gender==="Male").length;
   totalFemale.innerText = residents.filter(r=>r.gender==="Female").length;
 
-  // Charts
   const ageGroups = [
     residents.filter(r=>r.age<=12).length,
     residents.filter(r=>r.age>=13 && r.age<=24).length,
@@ -332,20 +412,17 @@ function renderDashboard(residents){
   if(ageChart) ageChart.destroy();
   if(statusChart) statusChart.destroy();
 
-  ageChart = new Chart(document.getElementById("ageChart"), {
-    type:'bar',
+  ageChart = new Chart(document.getElementById("ageChart"), {type:'bar',
     data:{labels:['Children','Youth','Adults','Seniors'], datasets:[{label:'Count',data:ageGroups,backgroundColor:'#1e906f'}]},
     options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
   });
-
-  statusChart = new Chart(document.getElementById("statusChart"), {
-    type:'bar',
+  statusChart = new Chart(document.getElementById("statusChart"), {type:'bar',
     data:{labels:['Single','Married','Widowed'], datasets:[{label:'Count',data:civilStatusCounts,backgroundColor:'#3ac17f'}]},
     options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
   });
 
   // Recent Activity
-  recentActivity.innerHTML = '';
+  recentActivity.innerHTML='';
   residents.slice(-5).reverse().forEach(r=>{
     recentActivity.innerHTML += `
       <div class="activity-card">
@@ -355,61 +432,137 @@ function renderDashboard(residents){
   });
 }
 
-// Firestore listener
-onSnapshot(collection(db,"residents"), snap=>{
-  const residents = snap.docs.map(d=>({id:d.id, ...d.data()}));
-
-  // Table
-  table.innerHTML = '';
+// RENDER REPORTS
+function renderReports(residents){
+  reportTable.innerHTML='';
   residents.forEach(r=>{
-    table.innerHTML += `
-      <tr>
-        <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
-        <td>${r.civilStatus}</td><td>${r.contact}</td>
-        <td>${r.purok}</td><td>${r.household}</td>
-        <td>
-          <button class="action-btn edit-btn" onclick='editResident("${r.id}", ${JSON.stringify(r)})'>Edit</button>
-          <button class="action-btn delete-btn" onclick='deleteResident("${r.id}")'>Delete</button>
-        </td>
-      </tr>`;
+    reportTable.innerHTML += `<tr>
+      <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+      <td>${r.civilStatus}</td><td>${r.contact}</td>
+      <td>${r.purok}</td><td>${r.household}</td>
+    </tr>`;
   });
 
-  // Render dashboard charts if already initialized
-  if(document.getElementById('dashboardView').classList.contains('active')){
-    renderDashboard(residents);
-  }
-});
+  // Charts
+  const totalPop = residents.length;
+  const maleCount = residents.filter(r=>r.gender==="Male").length;
+  const femaleCount = residents.filter(r=>r.gender==="Female").length;
+  const ageGroups = [
+    residents.filter(r=>r.age<=12).length,
+    residents.filter(r=>r.age>=13 && r.age<=24).length,
+    residents.filter(r=>r.age>=25 && r.age<=59).length,
+    residents.filter(r=>r.age>=60).length
+  ];
+  const civilStatusCounts = [
+    residents.filter(r=>r.civilStatus==="Single").length,
+    residents.filter(r=>r.civilStatus==="Married").length,
+    residents.filter(r=>r.civilStatus==="Widowed").length
+  ];
 
-// Edit/Delete
-window.editResident = (id,r)=>{
-  Object.keys(r).forEach(k=>{ if(document.getElementById(k)) document.getElementById(k).value = r[k]; });
-  editId = id;
-  formTitle.innerText = "Edit Resident";
+  if(populationChart) populationChart.destroy();
+  if(genderChart) genderChart.destroy();
+  if(ageReportChart) ageReportChart.destroy();
+  if(statusReportChart) statusReportChart.destroy();
+
+  populationChart = new Chart(document.getElementById("populationChart"), {type:'bar',
+    data:{labels:['Population'], datasets:[{label:'Total',data:[totalPop],backgroundColor:'#1e906f'}]},
+    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+  });
+
+  genderChart = new Chart(document.getElementById("genderChart"), {type:'bar',
+    data:{labels:['Male','Female'], datasets:[{label:'Count',data:[maleCount,femaleCount],backgroundColor:'#3ac17f'}]},
+    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+  });
+
+  ageReportChart = new Chart(document.getElementById("ageReportChart"), {type:'bar',
+    data:{labels:['Children','Youth','Adults','Seniors'], datasets:[{label:'Count',data:ageGroups,backgroundColor:'#1e906f'}]},
+    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+  });
+
+  statusReportChart = new Chart(document.getElementById("statusReportChart"), {type:'bar',
+    data:{labels:['Single','Married','Widowed'], datasets:[{label:'Count',data:civilStatusCounts,backgroundColor:'#3ac17f'}]},
+    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+  });
+}
+
+// FILTERS
+window.applyFilters = ()=>{
+  const gender = document.getElementById("filterGender").value;
+  const status = document.getElementById("filterStatus").value;
+  const purok = document.getElementById("filterPurok").value.toLowerCase();
+  const ageMin = parseInt(document.getElementById("filterAgeMin").value) || 0;
+  const ageMax = parseInt(document.getElementById("filterAgeMax").value) || 200;
+
+  onSnapshot(collection(db,"residents"), snap=>{
+    let residents = snap.docs.map(d=>({id:d.id,...d.data()}));
+    residents = residents.filter(r=>{
+      return (gender==="" || r.gender===gender)
+        && (status==="" || r.civilStatus===status)
+        && (purok==="" || r.purok.toLowerCase().includes(purok))
+        && (r.age>=ageMin && r.age<=ageMax);
+    });
+    renderReports(residents);
+  });
 };
 
+// EXPORT CSV
+window.exportCSV = ()=>{
+  let csv = "Name,Age,Gender,Civil Status,Contact,Purok,Household\n";
+  [...reportTable.rows].forEach(r=>{
+    csv += [...r.cells].map(c=>c.innerText).join(",")+"\n";
+  });
+  const blob = new Blob([csv], {type:'text/csv'});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "resident_report.csv";
+  link.click();
+};
+
+// FIRESTORE LISTENER
+onSnapshot(collection(db,"residents"), snap=>{
+  const residents = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  // Table
+  table.innerHTML='';
+  residents.forEach(r=>{
+    table.innerHTML += `<tr>
+      <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+      <td>${r.civilStatus}</td><td>${r.contact}</td>
+      <td>${r.purok}</td><td>${r.household}</td>
+      <td>
+        <button class="action-btn edit-btn" onclick='editResident("${r.id}", ${JSON.stringify(r)})'>Edit</button>
+        <button class="action-btn delete-btn" onclick='deleteResident("${r.id}")'>Delete</button>
+      </td>
+    </tr>`;
+  });
+
+  // Update Dashboard if active
+  if(document.getElementById('dashboardView').classList.contains('active')) renderDashboard(residents);
+  // Update Reports if active
+  if(document.getElementById('reportsView').classList.contains('active')) renderReports(residents);
+});
+
+// EDIT/DELETE
+window.editResident = (id,r)=>{
+  Object.keys(r).forEach(k=>{ if(document.getElementById(k)) document.getElementById(k).value = r[k]; });
+  editId=id;
+  formTitle.innerText="Edit Resident";
+};
 window.deleteResident = id=>{ if(confirm("Delete this resident?")) deleteDoc(doc(db,"residents",id)); };
 
-// View switching
+// VIEW SWITCH
 window.showView = id=>{
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-
-  // Render dashboard only when opened
-  if(id==='dashboardView'){
-    onSnapshot(collection(db,"residents"), snap=>{
-      renderDashboard(snap.docs.map(d=>({id:d.id,...d.data()})));
-    });
-  }
 };
 
-// Hamburger
+// HAMBURGER
 window.openSidebar = ()=>document.getElementById("sidebar").style.left="0";
 window.closeSidebar = ()=>document.getElementById("sidebar").style.left="-260px";
 
-// Logout
+// LOGOUT
 window.logout = ()=>signOut(auth).then(()=>location.href="index.html");
 
-// Search
+// SEARCH
 searchInput.addEventListener("input", ()=>{
   const f = searchInput.value.toLowerCase();
   [...table.rows].forEach(r=>{
