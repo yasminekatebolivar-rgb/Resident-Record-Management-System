@@ -1453,84 +1453,6 @@ input:checked + .slider:before {
 <!-- MAIN CONTENT -->
 <div class="main-container">
 
-  <!-- DASHBOARD VIEW -->
-  <div id="dashboardView" class="view">
-    <div class="view-header">
-      <h2><i class="fas fa-chart-line"></i> Dashboard Overview</h2>
-    </div>
-
-    <!-- Summary Cards -->
-    <div class="dashboard-summary">
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <div>
-            <div class="summary-card-value" id="totalResidents">0</div>
-            <div class="summary-card-label">Total Residents</div>
-          </div>
-          <div class="summary-card-icon green">
-            <i class="fas fa-users"></i>
-          </div>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <div>
-            <div class="summary-card-value" id="totalHouseholds">0</div>
-            <div class="summary-card-label">Total Households</div>
-          </div>
-          <div class="summary-card-icon blue">
-            <i class="fas fa-home"></i>
-          </div>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <div>
-            <div class="summary-card-value" id="totalMale">0</div>
-            <div class="summary-card-label">Male Residents</div>
-          </div>
-          <div class="summary-card-icon purple">
-            <i class="fas fa-male"></i>
-          </div>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="summary-card-header">
-          <div>
-            <div class="summary-card-value" id="totalFemale">0</div>
-            <div class="summary-card-label">Female Residents</div>
-          </div>
-          <div class="summary-card-icon orange">
-            <i class="fas fa-female"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Demographics -->
-    <div class="demographics-grid">
-      <div class="chart-card">
-        <h3>Age Group Distribution</h3>
-        <canvas id="ageChart"></canvas>
-      </div>
-      <div class="chart-card">
-        <h3>Civil Status Breakdown</h3>
-        <canvas id="statusChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Location Overview -->
-    <div class="card">
-      <h3><i class="fas fa-map-marker-alt"></i> Population by Zone</h3>
-      <div id="locationOverview" class="location-list"></div>
-    </div>
-
-    <!-- Recent Activity -->
-    <div class="card">
-      <h3><i class="fas fa-history"></i> Recent Activity</h3>
-      <div id="recentActivity"></div>
-    </div>
-  </div>
 
   <!-- RESIDENT VIEW -->
   <div id="residentView" class="view active">
@@ -1615,6 +1537,88 @@ input:checked + .slider:before {
       </table>
     </div>
   </div>
+
+  
+  <!-- DASHBOARD VIEW -->
+  <div id="dashboardView" class="view">
+    <div class="view-header">
+      <h2><i class="fas fa-chart-line"></i> Dashboard Overview</h2>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="dashboard-summary">
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <div>
+            <div class="summary-card-value" id="totalResidents">0</div>
+            <div class="summary-card-label">Total Residents</div>
+          </div>
+          <div class="summary-card-icon green">
+            <i class="fas fa-users"></i>
+          </div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <div>
+            <div class="summary-card-value" id="totalHouseholds">0</div>
+            <div class="summary-card-label">Total Households</div>
+          </div>
+          <div class="summary-card-icon blue">
+            <i class="fas fa-home"></i>
+          </div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <div>
+            <div class="summary-card-value" id="totalMale">0</div>
+            <div class="summary-card-label">Male Residents</div>
+          </div>
+          <div class="summary-card-icon purple">
+            <i class="fas fa-male"></i>
+          </div>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card-header">
+          <div>
+            <div class="summary-card-value" id="totalFemale">0</div>
+            <div class="summary-card-label">Female Residents</div>
+          </div>
+          <div class="summary-card-icon orange">
+            <i class="fas fa-female"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demographics -->
+    <div class="demographics-grid">
+      <div class="chart-card">
+        <h3>Age Group Distribution</h3>
+        <canvas id="ageChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Civil Status Breakdown</h3>
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Location Overview -->
+    <div class="card">
+      <h3><i class="fas fa-map-marker-alt"></i> Population by Zone</h3>
+      <div id="locationOverview" class="location-list"></div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+      <h3><i class="fas fa-history"></i> Recent Activity</h3>
+      <div id="recentActivity"></div>
+    </div>
+  </div>
+
+
 
   <!-- REPORTS VIEW -->
   <div id="reportsView" class="view">
