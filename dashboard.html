@@ -107,6 +107,7 @@ form input, form select {
   margin-bottom: 12px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 form button {
@@ -118,6 +119,10 @@ form button {
   border-radius: 25px;
   font-weight: 600;
   cursor: pointer;
+}
+
+form button:hover {
+  background: #166d55;
 }
 
 /* ===== TABLE ===== */
@@ -149,6 +154,207 @@ table th { background:#f1f1f1; }
   display:flex; justify-content:space-between;
 }
 .activity-time { color:#555; font-size:12px; }
+
+/* ===== REPORTS SPECIFIC ===== */
+.report-filters {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.filter-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.filter-group input, .filter-group select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.export-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-print { background: #2196F3; color: white; }
+.btn-pdf { background: #f44336; color: white; }
+.btn-csv { background: #4CAF50; color: white; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.stat-card h4 {
+  margin: 0 0 10px;
+  color: #666;
+  font-size: 14px;
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+  color: #1e906f;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* ===== SETTINGS SPECIFIC ===== */
+.settings-section {
+  margin-bottom: 30px;
+}
+
+.settings-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #1e906f;
+  border-bottom: 2px solid #1e906f;
+  padding-bottom: 10px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #555;
+}
+
+.info-value {
+  color: #333;
+}
+
+.settings-button {
+  background: #1e906f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.settings-button:hover {
+  background: #166d55;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #1e906f;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.alert-box {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 15px;
+  color: #856404;
+}
+
+/* Print Styles */
+@media print {
+  .hamburger-container, .sidebar, .export-buttons, .report-filters {
+    display: none !important;
+  }
+  .main-container {
+    padding: 20px;
+  }
+  .card {
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+}
 </style>
 </head>
 <body>
@@ -161,11 +367,11 @@ table th { background:#f1f1f1; }
 <!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <button class="close-btn" onclick="closeSidebar()">&times;</button>
-  <a onclick="showView('dashboardView')">Dashboard</a>
-  <a onclick="showView('residentView')">Residents</a>
-  <a onclick="showView('reportsView')">Reports</a>
-  <a onclick="showView('settingsView')">Settings</a>
-  <a onclick="logout()">Logout</a>
+  <a onclick="showView('dashboardView')"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+  <a onclick="showView('residentView')"><i class="fas fa-users"></i> Residents</a>
+  <a onclick="showView('reportsView')"><i class="fas fa-chart-bar"></i> Reports</a>
+  <a onclick="showView('settingsView')"><i class="fas fa-cog"></i> Settings</a>
+  <a onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
 </div>
 
 <!-- MAIN -->
@@ -247,16 +453,205 @@ table th { background:#f1f1f1; }
   </div>
 
   <!-- REPORTS VIEW -->
-  <div id="reportsView" class="view"><h2>Reports</h2></div>
-  <div id="settingsView" class="view"><h2>Settings</h2></div>
+  <div id="reportsView" class="view">
+    <h2>📊 Reports & Analytics</h2>
+
+    <!-- Statistical Summary -->
+    <div class="card" style="margin-bottom: 30px;">
+      <h3>Statistical Summary</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Total Population</h4>
+          <p id="reportTotalPop">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Male</h4>
+          <p id="reportMale">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Female</h4>
+          <p id="reportFemale">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Children (0-12)</h4>
+          <p id="reportChildren">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Youth (13-24)</h4>
+          <p id="reportYouth">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Adults (25-59)</h4>
+          <p id="reportAdults">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Seniors (60+)</h4>
+          <p id="reportSeniors">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Single</h4>
+          <p id="reportSingle">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Married</h4>
+          <p id="reportMarried">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Widowed</h4>
+          <p id="reportWidowed">0</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+      <div class="chart-container">
+        <h3>Gender Distribution</h3>
+        <canvas id="reportGenderChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Age Group Distribution</h3>
+        <canvas id="reportAgeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Resident List Report -->
+    <div class="card">
+      <h3>Resident List Report</h3>
+      
+      <!-- Filters -->
+      <div class="report-filters">
+        <div class="filter-group">
+          <label>Gender</label>
+          <select id="filterGender">
+            <option value="">All</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Civil Status</label>
+          <select id="filterStatus">
+            <option value="">All</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Widowed">Widowed</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Purok</label>
+          <input type="text" id="filterPurok" placeholder="Enter Purok">
+        </div>
+        <div class="filter-group">
+          <label>Min Age</label>
+          <input type="number" id="filterMinAge" placeholder="Min">
+        </div>
+        <div class="filter-group">
+          <label>Max Age</label>
+          <input type="number" id="filterMaxAge" placeholder="Max">
+        </div>
+        <div class="filter-group">
+          <button class="settings-button" onclick="applyFilters()">Apply Filters</button>
+        </div>
+      </div>
+
+      <!-- Export Buttons -->
+      <div class="export-buttons">
+        <button class="export-btn btn-print" onclick="printReport()">
+          <i class="fas fa-print"></i> Print
+        </button>
+        <button class="export-btn btn-csv" onclick="exportCSV()">
+          <i class="fas fa-file-csv"></i> Export CSV
+        </button>
+      </div>
+
+      <!-- Report Table -->
+      <div id="reportTableContainer">
+        <table id="reportTable">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Full Name</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Civil Status</th>
+              <th>Contact</th>
+              <th>Purok</th>
+              <th>Household</th>
+            </tr>
+          </thead>
+          <tbody id="reportTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div id="settingsView" class="view">
+    <h2>⚙️ Settings</h2>
+
+    <div class="dashboard-grid">
+      <!-- Admin Account Settings -->
+      <div class="card settings-section">
+        <h3>Admin Account Settings</h3>
+        <div class="info-row">
+          <span class="info-label">Email:</span>
+          <span class="info-value" id="adminEmail">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Last Login:</span>
+          <span class="info-value" id="lastLogin">Loading...</span>
+        </div>
+        <button class="settings-button" onclick="changePassword()">
+          <i class="fas fa-key"></i> Change Password
+        </button>
+      </div>
+
+      <!-- Barangay Configuration -->
+      <div class="card settings-section">
+        <h3>Barangay Configuration</h3>
+        <form id="barangayForm">
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Barangay Name</label>
+          <input type="text" id="barangayName" placeholder="Enter Barangay Name" required>
+          
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Municipality</label>
+          <input type="text" id="municipality" placeholder="Enter Municipality" required>
+          
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Province</label>
+          <input type="text" id="province" placeholder="Enter Province" required>
+          
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Default Purok List (comma-separated)</label>
+          <input type="text" id="purokList" placeholder="e.g., Purok 1, Purok 2, Purok 3" required>
+          
+          <button type="submit">Save Configuration</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- System Controls -->
+    <div class="card settings-section">
+      <h3>System Controls</h3>
+      <div class="info-row">
+        <span class="info-label">Enable Resident Editing</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="enableEditing" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="alert-box">
+        <strong><i class="fas fa-exclamation-triangle"></i> Data Backup Reminder:</strong><br>
+        Please ensure you regularly export and backup your resident data. Use the Reports section to export CSV files for safekeeping.
+      </div>
+    </div>
+  </div>
 
 </div>
 
 <!-- ===== FIREBASE & LOGIC ===== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import { getAuth, signOut, onAuthStateChanged, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc, serverTimestamp, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDfuvGXliuYZqB9KFsB3DPn6GAX1HCYt3Y",
@@ -271,7 +666,19 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-onAuthStateChanged(auth, user => { if(!user) location.href="index.html"; });
+let currentUser = null;
+let allResidents = [];
+let filteredResidents = [];
+
+onAuthStateChanged(auth, user => { 
+  if(!user) {
+    location.href="index.html";
+  } else {
+    currentUser = user;
+    loadAdminSettings();
+    updateLastLogin();
+  }
+});
 
 // Elements
 const form = document.getElementById("residentForm");
@@ -286,10 +693,19 @@ const recentActivity = document.getElementById("recentActivity");
 
 let editId = null;
 let ageChart, statusChart;
+let reportGenderChart, reportAgeChart;
 
 // Add or Update Resident
 form.addEventListener("submit", async e=>{
   e.preventDefault();
+  
+  // Check if editing is enabled
+  const enableEditing = document.getElementById("enableEditing").checked;
+  if(editId && !enableEditing) {
+    alert("Editing is currently disabled in Settings.");
+    return;
+  }
+  
   const data = {
     fullname: fullname.value,
     age: parseInt(age.value),
@@ -298,13 +714,21 @@ form.addEventListener("submit", async e=>{
     contact: contact.value,
     purok: purok.value,
     household: household.value,
-    createdAt: serverTimestamp()
+    createdAt: editId ? undefined : serverTimestamp()
   };
-  editId ? await updateDoc(doc(db,"residents",editId),data)
-         : await addDoc(collection(db,"residents"),data);
-  form.reset();
-  editId=null;
-  formTitle.innerText="Add Resident";
+  
+  try {
+    if(editId) {
+      await updateDoc(doc(db,"residents",editId), data);
+    } else {
+      await addDoc(collection(db,"residents"), {...data, createdAt: serverTimestamp()});
+    }
+    form.reset();
+    editId=null;
+    formTitle.innerText="Add Resident";
+  } catch(error) {
+    alert("Error saving resident: " + error.message);
+  }
 });
 
 // Render Dashboard
@@ -346,59 +770,241 @@ function renderDashboard(residents){
 
   // Recent Activity
   recentActivity.innerHTML = '';
-  residents.slice(-5).reverse().forEach(r=>{
-    recentActivity.innerHTML += `
-      <div class="activity-card">
-        <span>${r.fullname} added</span>
-        <span class="activity-time">${r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString() : new Date().toLocaleString()}</span>
-      </div>`;
-  });
+  const recentList = residents.slice(-5).reverse();
+  if(recentList.length === 0) {
+    recentActivity.innerHTML = '<p style="color:#999;">No recent activity</p>';
+  } else {
+    recentList.forEach(r=>{
+      recentActivity.innerHTML += `
+        <div class="activity-card">
+          <span>${r.fullname} added</span>
+          <span class="activity-time">${r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString() : new Date().toLocaleString()}</span>
+        </div>`;
+    });
+  }
 }
+
+// Render Reports
+function renderReports(residents) {
+  // Statistical Summary
+  document.getElementById("reportTotalPop").innerText = residents.length;
+  document.getElementById("reportMale").innerText = residents.filter(r=>r.gender==="Male").length;
+  document.getElementById("reportFemale").innerText = residents.filter(r=>r.gender==="Female").length;
+  document.getElementById("reportChildren").innerText = residents.filter(r=>r.age<=12).length;
+  document.getElementById("reportYouth").innerText = residents.filter(r=>r.age>=13 && r.age<=24).length;
+  document.getElementById("reportAdults").innerText = residents.filter(r=>r.age>=25 && r.age<=59).length;
+  document.getElementById("reportSeniors").innerText = residents.filter(r=>r.age>=60).length;
+  document.getElementById("reportSingle").innerText = residents.filter(r=>r.civilStatus==="Single").length;
+  document.getElementById("reportMarried").innerText = residents.filter(r=>r.civilStatus==="Married").length;
+  document.getElementById("reportWidowed").innerText = residents.filter(r=>r.civilStatus==="Widowed").length;
+
+  // Gender Chart
+  const maleCount = residents.filter(r=>r.gender==="Male").length;
+  const femaleCount = residents.filter(r=>r.gender==="Female").length;
+  
+  if(reportGenderChart) reportGenderChart.destroy();
+  reportGenderChart = new Chart(document.getElementById("reportGenderChart"), {
+    type: 'doughnut',
+    data: {
+      labels: ['Male', 'Female'],
+      datasets: [{
+        data: [maleCount, femaleCount],
+        backgroundColor: ['#1e906f', '#3ac17f']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom' }
+      }
+    }
+  });
+
+  // Age Group Chart
+  const ageGroups = [
+    residents.filter(r=>r.age<=12).length,
+    residents.filter(r=>r.age>=13 && r.age<=24).length,
+    residents.filter(r=>r.age>=25 && r.age<=59).length,
+    residents.filter(r=>r.age>=60).length
+  ];
+  
+  if(reportAgeChart) reportAgeChart.destroy();
+  reportAgeChart = new Chart(document.getElementById("reportAgeChart"), {
+    type: 'bar',
+    data: {
+      labels: ['Children (0-12)', 'Youth (13-24)', 'Adults (25-59)', 'Seniors (60+)'],
+      datasets: [{
+        label: 'Population',
+        data: ageGroups,
+        backgroundColor: '#1e906f'
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Render filtered table
+  renderReportTable(residents);
+}
+
+// Render Report Table
+function renderReportTable(residents) {
+  const tbody = document.getElementById("reportTableBody");
+  tbody.innerHTML = '';
+  
+  if(residents.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#999;">No residents found</td></tr>';
+    return;
+  }
+  
+  residents.forEach((r, index) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${r.fullname}</td>
+        <td>${r.age}</td>
+        <td>${r.gender}</td>
+        <td>${r.civilStatus}</td>
+        <td>${r.contact}</td>
+        <td>${r.purok}</td>
+        <td>${r.household}</td>
+      </tr>`;
+  });
+  
+  filteredResidents = residents;
+}
+
+// Apply Filters
+window.applyFilters = () => {
+  const gender = document.getElementById("filterGender").value;
+  const status = document.getElementById("filterStatus").value;
+  const purok = document.getElementById("filterPurok").value.toLowerCase();
+  const minAge = document.getElementById("filterMinAge").value;
+  const maxAge = document.getElementById("filterMaxAge").value;
+
+  let filtered = [...allResidents];
+
+  if(gender) filtered = filtered.filter(r => r.gender === gender);
+  if(status) filtered = filtered.filter(r => r.civilStatus === status);
+  if(purok) filtered = filtered.filter(r => r.purok.toLowerCase().includes(purok));
+  if(minAge) filtered = filtered.filter(r => r.age >= parseInt(minAge));
+  if(maxAge) filtered = filtered.filter(r => r.age <= parseInt(maxAge));
+
+  renderReportTable(filtered);
+};
+
+// Print Report
+window.printReport = () => {
+  window.print();
+};
+
+// Export CSV
+window.exportCSV = () => {
+  if(filteredResidents.length === 0) {
+    alert("No data to export");
+    return;
+  }
+
+  let csv = "No.,Full Name,Age,Gender,Civil Status,Contact,Purok,Household\n";
+  
+  filteredResidents.forEach((r, index) => {
+    csv += `${index + 1},"${r.fullname}",${r.age},"${r.gender}","${r.civilStatus}","${r.contact}","${r.purok}","${r.household}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `resident_report_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
 
 // Firestore listener
 onSnapshot(collection(db,"residents"), snap=>{
   const residents = snap.docs.map(d=>({id:d.id, ...d.data()}));
+  allResidents = residents;
+  filteredResidents = residents;
+
+  // Check if editing is enabled
+  const enableEditing = document.getElementById("enableEditing").checked;
 
   // Table
   table.innerHTML = '';
   residents.forEach(r=>{
+    const actionButtons = enableEditing 
+      ? `<button class="action-btn edit-btn" onclick='editResident("${r.id}", ${JSON.stringify(r)})'>Edit</button>
+         <button class="action-btn delete-btn" onclick='deleteResident("${r.id}")'>Delete</button>`
+      : '<span style="color:#999;">Actions disabled</span>';
+    
     table.innerHTML += `
       <tr>
         <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
         <td>${r.civilStatus}</td><td>${r.contact}</td>
         <td>${r.purok}</td><td>${r.household}</td>
-        <td>
-          <button class="action-btn edit-btn" onclick='editResident("${r.id}", ${JSON.stringify(r)})'>Edit</button>
-          <button class="action-btn delete-btn" onclick='deleteResident("${r.id}")'>Delete</button>
-        </td>
+        <td>${actionButtons}</td>
       </tr>`;
   });
 
-  // Render dashboard charts if already initialized
+  // Render dashboard if active
   if(document.getElementById('dashboardView').classList.contains('active')){
     renderDashboard(residents);
+  }
+
+  // Render reports if active
+  if(document.getElementById('reportsView').classList.contains('active')){
+    renderReports(residents);
   }
 });
 
 // Edit/Delete
 window.editResident = (id,r)=>{
+  const enableEditing = document.getElementById("enableEditing").checked;
+  if(!enableEditing) {
+    alert("Editing is currently disabled in Settings.");
+    return;
+  }
+  
   Object.keys(r).forEach(k=>{ if(document.getElementById(k)) document.getElementById(k).value = r[k]; });
   editId = id;
   formTitle.innerText = "Edit Resident";
+  showView('residentView');
 };
 
-window.deleteResident = id=>{ if(confirm("Delete this resident?")) deleteDoc(doc(db,"residents",id)); };
+window.deleteResident = id=>{
+  const enableEditing = document.getElementById("enableEditing").checked;
+  if(!enableEditing) {
+    alert("Editing is currently disabled in Settings.");
+    return;
+  }
+  
+  if(confirm("Delete this resident?")) {
+    deleteDoc(doc(db,"residents",id));
+  }
+};
 
 // View switching
 window.showView = id=>{
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  closeSidebar();
 
-  // Render dashboard only when opened
+  // Render dashboard when opened
   if(id==='dashboardView'){
-    onSnapshot(collection(db,"residents"), snap=>{
-      renderDashboard(snap.docs.map(d=>({id:d.id,...d.data()})));
-    });
+    renderDashboard(allResidents);
+  }
+
+  // Render reports when opened
+  if(id==='reportsView'){
+    renderReports(allResidents);
+  }
+
+  // Load settings when opened
+  if(id==='settingsView'){
+    loadBarangayConfig();
   }
 };
 
@@ -407,7 +1013,15 @@ window.openSidebar = ()=>document.getElementById("sidebar").style.left="0";
 window.closeSidebar = ()=>document.getElementById("sidebar").style.left="-260px";
 
 // Logout
-window.logout = ()=>signOut(auth).then(()=>location.href="index.html");
+window.logout = () => {
+  if(confirm("Are you sure you want to logout?")) {
+    signOut(auth).then(()=>{
+      location.href="index.html";
+    }).catch(error => {
+      alert("Error logging out: " + error.message);
+    });
+  }
+};
 
 // Search
 searchInput.addEventListener("input", ()=>{
@@ -416,6 +1030,145 @@ searchInput.addEventListener("input", ()=>{
     r.style.display = r.innerText.toLowerCase().includes(f) ? "" : "none";
   });
 });
+
+// Settings Functions
+async function loadAdminSettings() {
+  if(currentUser) {
+    document.getElementById("adminEmail").innerText = currentUser.email;
+    
+    try {
+      const docRef = doc(db, "adminSettings", currentUser.uid);
+      const docSnap = await getDoc(docRef);
+      
+      if(docSnap.exists()) {
+        const data = docSnap.data();
+        if(data.lastLogin) {
+          document.getElementById("lastLogin").innerText = data.lastLogin.toDate().toLocaleString();
+        }
+      } else {
+        document.getElementById("lastLogin").innerText = "First time login";
+      }
+    } catch(error) {
+      document.getElementById("lastLogin").innerText = "Error loading";
+    }
+  }
+}
+
+async function updateLastLogin() {
+  if(currentUser) {
+    try {
+      await setDoc(doc(db, "adminSettings", currentUser.uid), {
+        lastLogin: serverTimestamp(),
+        email: currentUser.email
+      }, { merge: true });
+    } catch(error) {
+      console.error("Error updating last login:", error);
+    }
+  }
+}
+
+window.changePassword = async () => {
+  const currentPassword = prompt("Enter your current password:");
+  if(!currentPassword) return;
+
+  const newPassword = prompt("Enter your new password (minimum 6 characters):");
+  if(!newPassword || newPassword.length < 6) {
+    alert("New password must be at least 6 characters long");
+    return;
+  }
+
+  const confirmPassword = prompt("Confirm your new password:");
+  if(newPassword !== confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    // Reauthenticate user
+    const credential = EmailAuthProvider.credential(currentUser.email, currentPassword);
+    await reauthenticateWithCredential(currentUser, credential);
+    
+    // Update password
+    await updatePassword(currentUser, newPassword);
+    alert("Password changed successfully!");
+  } catch(error) {
+    if(error.code === 'auth/wrong-password') {
+      alert("Current password is incorrect");
+    } else {
+      alert("Error changing password: " + error.message);
+    }
+  }
+};
+
+// Barangay Configuration
+const barangayForm = document.getElementById("barangayForm");
+barangayForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  
+  const config = {
+    barangayName: document.getElementById("barangayName").value,
+    municipality: document.getElementById("municipality").value,
+    province: document.getElementById("province").value,
+    purokList: document.getElementById("purokList").value,
+    updatedAt: serverTimestamp()
+  };
+
+  try {
+    await setDoc(doc(db, "systemConfig", "barangay"), config);
+    alert("Barangay configuration saved successfully!");
+  } catch(error) {
+    alert("Error saving configuration: " + error.message);
+  }
+});
+
+async function loadBarangayConfig() {
+  try {
+    const docRef = doc(db, "systemConfig", "barangay");
+    const docSnap = await getDoc(docRef);
+    
+    if(docSnap.exists()) {
+      const data = docSnap.data();
+      document.getElementById("barangayName").value = data.barangayName || '';
+      document.getElementById("municipality").value = data.municipality || '';
+      document.getElementById("province").value = data.province || '';
+      document.getElementById("purokList").value = data.purokList || '';
+    }
+  } catch(error) {
+    console.error("Error loading barangay config:", error);
+  }
+}
+
+// Enable/Disable Editing Toggle
+document.getElementById("enableEditing").addEventListener("change", () => {
+  // Trigger table re-render
+  onSnapshot(collection(db,"residents"), snap=>{
+    const residents = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    allResidents = residents;
+    
+    const enableEditing = document.getElementById("enableEditing").checked;
+    table.innerHTML = '';
+    residents.forEach(r=>{
+      const actionButtons = enableEditing 
+        ? `<button class="action-btn edit-btn" onclick='editResident("${r.id}", ${JSON.stringify(r)})'>Edit</button>
+           <button class="action-btn delete-btn" onclick='deleteResident("${r.id}")'>Delete</button>`
+        : '<span style="color:#999;">Actions disabled</span>';
+      
+      table.innerHTML += `
+        <tr>
+          <td>${r.fullname}</td><td>${r.age}</td><td>${r.gender}</td>
+          <td>${r.civilStatus}</td><td>${r.contact}</td>
+          <td>${r.purok}</td><td>${r.household}</td>
+          <td>${actionButtons}</td>
+        </tr>`;
+    });
+  }, { once: true });
+});
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+  // Set default view
+  showView('residentView');
+});
 </script>
 </body>
-</html> 
+</html>
