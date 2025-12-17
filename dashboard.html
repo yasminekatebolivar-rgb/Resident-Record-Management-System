@@ -26,6 +26,12 @@ body {
   top: 20px;
   left: 20px;
   z-index: 1200;
+  transition: opacity 0.3s;
+}
+
+.hamburger-container.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hamburger {
@@ -144,6 +150,61 @@ table th { background:#f1f1f1; }
 .card-small h4 { margin:0 0 10px; font-size:14px; }
 .card-small p { font-size:22px; margin:0; font-weight:bold; }
 
+/* ===== DEMOGRAPHICS GRID ===== */
+.demographics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* ===== LOCATION OVERVIEW ===== */
+.location-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.location-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.location-item:hover {
+  background: #f9f9f9;
+}
+
+.location-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.location-count {
+  background: #1e906f;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.location-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.location-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, #1e906f, #3ac17f);
+  transition: width 0.5s ease;
+}
+
 /* ===== RECENT ACTIVITY ===== */
 .recent-activity { margin-top:30px; }
 .activity-card {
@@ -151,9 +212,48 @@ table th { background:#f1f1f1; }
   padding:10px 15px;
   border-radius:10px;
   margin-bottom:10px;
-  display:flex; justify-content:space-between;
+  display:flex; 
+  justify-content:space-between;
+  align-items: center;
 }
-.activity-time { color:#555; font-size:12px; }
+
+.activity-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.activity-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #1e906f;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.activity-action {
+  font-size: 12px;
+  color: #777;
+}
+
+.activity-time { 
+  color:#555; 
+  font-size:12px; 
+}
 
 /* ===== REPORTS SPECIFIC ===== */
 .report-filters {
@@ -360,7 +460,7 @@ input:checked + .slider:before {
 <body>
 
 <!-- HAMBURGER -->
-<div class="hamburger-container">
+<div id="hamburgerContainer" class="hamburger-container">
   <button class="hamburger" onclick="openSidebar()"><i class="fas fa-bars"></i></button>
 </div>
 
@@ -379,7 +479,7 @@ input:checked + .slider:before {
 
   <!-- DASHBOARD VIEW -->
   <div id="dashboardView" class="view">
-    <h2>Dashboard</h2>
+    <h2>📊 Dashboard Overview</h2>
 
     <!-- Summary Cards -->
     <div class="dashboard-cards">
@@ -390,7 +490,7 @@ input:checked + .slider:before {
     </div>
 
     <!-- Demographics -->
-    <div class="dashboard-grid">
+    <div class="demographics-grid">
       <div class="card">
         <h3>Age Group Distribution</h3>
         <canvas id="ageChart"></canvas>
@@ -401,9 +501,15 @@ input:checked + .slider:before {
       </div>
     </div>
 
+    <!-- Location Overview -->
+    <div class="card" style="margin-bottom: 20px;">
+      <h3>📍 Population by Purok</h3>
+      <div id="locationOverview" class="location-list"></div>
+    </div>
+
     <!-- Recent Activity -->
     <div class="card recent-activity">
-      <h3>Recent Activity</h3>
+      <h3>🕒 Recent Activity</h3>
       <div id="recentActivity"></div>
     </div>
   </div>
@@ -690,6 +796,7 @@ const totalHouseholds = document.getElementById("totalHouseholds");
 const totalMale = document.getElementById("totalMale");
 const totalFemale = document.getElementById("totalFemale");
 const recentActivity = document.getElementById("recentActivity");
+const locationOverview = document.getElementById("locationOverview");
 
 let editId = null;
 let ageChart, statusChart;
@@ -714,7 +821,7 @@ form.addEventListener("submit", async e=>{
     contact: contact.value,
     purok: purok.value,
     household: household.value,
-    createdAt: editId ? undefined : serverTimestamp()
+    updatedAt: serverTimestamp()
   };
   
   try {
@@ -740,45 +847,140 @@ function renderDashboard(residents){
   totalMale.innerText = residents.filter(r=>r.gender==="Male").length;
   totalFemale.innerText = residents.filter(r=>r.gender==="Female").length;
 
-  // Charts
+  // Age Group Chart
   const ageGroups = [
     residents.filter(r=>r.age<=12).length,
     residents.filter(r=>r.age>=13 && r.age<=24).length,
     residents.filter(r=>r.age>=25 && r.age<=59).length,
     residents.filter(r=>r.age>=60).length
   ];
+
+  if(ageChart) ageChart.destroy();
+  ageChart = new Chart(document.getElementById("ageChart"), {
+    type:'bar',
+    data:{
+      labels:['Children (0-12)','Youth (13-24)','Adults (25-59)','Seniors (60+)'], 
+      datasets:[{
+        label:'Count',
+        data:ageGroups,
+        backgroundColor:['#1e906f', '#3ac17f', '#5fd89b', '#7fe3ae']
+      }]
+    },
+    options:{
+      responsive:true, 
+      maintainAspectRatio: true,
+      plugins:{legend:{display:false}}, 
+      scales:{y:{beginAtZero:true, ticks:{stepSize:1}}}
+    }
+  });
+
+  // Civil Status Chart
   const civilStatusCounts = [
     residents.filter(r=>r.civilStatus==="Single").length,
     residents.filter(r=>r.civilStatus==="Married").length,
     residents.filter(r=>r.civilStatus==="Widowed").length
   ];
 
-  if(ageChart) ageChart.destroy();
   if(statusChart) statusChart.destroy();
-
-  ageChart = new Chart(document.getElementById("ageChart"), {
-    type:'bar',
-    data:{labels:['Children','Youth','Adults','Seniors'], datasets:[{label:'Count',data:ageGroups,backgroundColor:'#1e906f'}]},
-    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
-  });
-
   statusChart = new Chart(document.getElementById("statusChart"), {
-    type:'bar',
-    data:{labels:['Single','Married','Widowed'], datasets:[{label:'Count',data:civilStatusCounts,backgroundColor:'#3ac17f'}]},
-    options:{responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true}}}
+    type:'doughnut',
+    data:{
+      labels:['Single','Married','Widowed'], 
+      datasets:[{
+        label:'Count',
+        data:civilStatusCounts,
+        backgroundColor:['#1e906f', '#3ac17f', '#7fe3ae']
+      }]
+    },
+    options:{
+      responsive:true, 
+      maintainAspectRatio: true,
+      plugins:{legend:{position:'bottom'}}
+    }
   });
+
+  // Location Overview (Purok Distribution)
+  renderLocationOverview(residents);
 
   // Recent Activity
+  renderRecentActivity(residents);
+}
+
+// Render Location Overview
+function renderLocationOverview(residents) {
+  // Count residents per purok
+  const purokCounts = {};
+  residents.forEach(r => {
+    const purok = r.purok || 'Unknown';
+    purokCounts[purok] = (purokCounts[purok] || 0) + 1;
+  });
+
+  // Sort by count (descending)
+  const sortedPuroks = Object.entries(purokCounts).sort((a, b) => b[1] - a[1]);
+  
+  if(sortedPuroks.length === 0) {
+    locationOverview.innerHTML = '<p style="color:#999; text-align:center; padding:20px;">No location data available</p>';
+    return;
+  }
+
+  // Find max count for bar width calculation
+  const maxCount = Math.max(...sortedPuroks.map(p => p[1]));
+
+  locationOverview.innerHTML = '';
+  sortedPuroks.forEach(([purok, count]) => {
+    const percentage = (count / maxCount) * 100;
+    locationOverview.innerHTML += `
+      <div class="location-item">
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span class="location-name">${purok}</span>
+            <span class="location-count">${count}</span>
+          </div>
+          <div class="location-bar">
+            <div class="location-bar-fill" style="width: ${percentage}%"></div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Render Recent Activity
+function renderRecentActivity(residents) {
   recentActivity.innerHTML = '';
-  const recentList = residents.slice(-5).reverse();
+  
+  // Sort by timestamp (most recent first)
+  const sortedResidents = [...residents].sort((a, b) => {
+    const timeA = a.updatedAt?.toDate ? a.updatedAt.toDate() : (a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0));
+    const timeB = b.updatedAt?.toDate ? b.updatedAt.toDate() : (b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0));
+    return timeB - timeA;
+  });
+
+  const recentList = sortedResidents.slice(0, 5);
+  
   if(recentList.length === 0) {
-    recentActivity.innerHTML = '<p style="color:#999;">No recent activity</p>';
+    recentActivity.innerHTML = '<p style="color:#999; text-align:center; padding:20px;">No recent activity</p>';
   } else {
-    recentList.forEach(r=>{
+    recentList.forEach(r => {
+      const isUpdated = r.updatedAt?.toDate ? true : false;
+      const action = isUpdated ? 'Updated' : 'Added';
+      const icon = isUpdated ? 'fa-edit' : 'fa-user-plus';
+      const timestamp = isUpdated 
+        ? (r.updatedAt.toDate ? r.updatedAt.toDate().toLocaleString() : 'Recently')
+        : (r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString() : new Date().toLocaleString());
+
       recentActivity.innerHTML += `
         <div class="activity-card">
-          <span>${r.fullname} added</span>
-          <span class="activity-time">${r.createdAt?.toDate ? r.createdAt.toDate().toLocaleString() : new Date().toLocaleString()}</span>
+          <div class="activity-info">
+            <div class="activity-icon">
+              <i class="fas ${icon}"></i>
+            </div>
+            <div class="activity-details">
+              <span class="activity-name">${r.fullname}</span>
+              <span class="activity-action">${action}</span>
+            </div>
+          </div>
+          <span class="activity-time">${timestamp}</span>
         </div>`;
     });
   }
@@ -1008,9 +1210,20 @@ window.showView = id=>{
   }
 };
 
-// Hamburger
-window.openSidebar = ()=>document.getElementById("sidebar").style.left="0";
-window.closeSidebar = ()=>document.getElementById("sidebar").style.left="-260px";
+// Hamburger & Sidebar Functions
+window.openSidebar = () => {
+  const sidebar = document.getElementById("sidebar");
+  const hamburger = document.getElementById("hamburgerContainer");
+  sidebar.style.left = "0";
+  hamburger.classList.add("hidden");
+};
+
+window.closeSidebar = () => {
+  const sidebar = document.getElementById("sidebar");
+  const hamburger = document.getElementById("hamburgerContainer");
+  sidebar.style.left = "-260px";
+  hamburger.classList.remove("hidden");
+};
 
 // Logout
 window.logout = () => {
@@ -1164,9 +1377,9 @@ document.getElementById("enableEditing").addEventListener("change", () => {
   }, { once: true });
 });
 
-// Initialize
+// Initialize - Resident View remains default
 document.addEventListener("DOMContentLoaded", () => {
-  // Set default view
+  // Ensure Resident View is default
   showView('residentView');
 });
 </script>
