@@ -2209,7 +2209,45 @@ function renderDashboard(residents){
 
   renderLocationOverview(residents);
   renderRecentActivity(residents);
+  renderPopulationByZone(residents);
 }
+
+  function renderPopulationByZone(residents) {
+  locationOverview.innerHTML = "";
+
+  const zoneCounts = {};
+
+  residents.forEach(r => {
+    let zone = r.zone?.trim();
+
+    if (!zone) {
+      zone = "Unknown";
+    } else {
+      zone = zone.toUpperCase();
+    }
+
+    zoneCounts[zone] = (zoneCounts[zone] || 0) + 1;
+  });
+
+  const maxCount = Math.max(...Object.values(zoneCounts));
+
+  Object.entries(zoneCounts).forEach(([zone, count]) => {
+    const percent = (count / maxCount) * 100;
+
+    locationOverview.innerHTML += `
+      <div class="location-item">
+        <div class="location-header">
+          <span class="location-name">${zone}</span>
+          <span class="location-count">${count}</span>
+        </div>
+        <div class="location-bar">
+          <div class="location-bar-fill" style="width:${percent}%"></div>
+        </div>
+      </div>
+    `;
+  });
+}
+
 
 function renderLocationOverview(residents) {
   const zoneCounts = {};
